@@ -1,0 +1,184 @@
+@import "/src/styles/settings.pcss";
+
+.checkbox {
+    font-size: 14px;
+    line-height: 18px;
+    padding-left: 16px;
+
+    &_white {
+        .checkbox__label {
+            &::before {
+                background-color: var(--white);
+            }
+        }
+
+        .checkbox__label:hover {
+            &::before {
+                background-color: var(--gray_90);
+            }
+        }
+
+        .checkbox__input:disabled + .checkbox__label:hover::before {
+            background-color: var(--white);
+        }
+    }
+
+    &_white-with-border {
+        padding-left: 22px;
+        min-height: 22px;
+
+        .checkbox__input {
+            &:checked + .checkbox__label {
+                &::before {
+                    border-color: var(--black);
+                    background-color: var(--black);
+                }
+            }
+
+            &:disabled + .checkbox__label {
+                color: var(--gray_50);
+            }
+            &:disabled + .checkbox__label:hover::before {
+                background-color: var(--white);
+                border-color: var(--gray_90);
+            }
+
+            &:focus + .checkbox__label::before {
+                box-shadow: none;
+                border-color: var(--black);
+            }
+
+            &:disabled:checked + .checkbox__label:hover::before {
+                border-color: var(--black);
+                background-color: var(--black);
+            }
+        }
+
+        .checkbox__label {
+            padding-top: 3px;
+
+            &:hover {
+                &::before {
+                    border-color: var(--gray_80);
+                    background-color: var(--white);
+                }
+            }
+
+            &::before {
+                top: 1px;
+                left: -21px;
+                width: 20px;
+                height: 20px;
+                border: 1px solid var(--gray_90);
+                background-color: var(--white);
+            }
+        }
+
+        .checkbox__icon {
+            top: 5px;
+            left: -17px;
+            fill: var(--white);
+        }
+    }
+
+    &.checkbox_white-with-border.checkbox_error {
+        .checkbox__label {
+            &::before {
+                border-color: var(--error);
+                box-shadow: none;
+            }
+        }
+    }
+
+    &_error {
+        .checkbox__label {
+            &::before {
+                box-shadow: inset 0 0 0 1px var(--error);
+            }
+        }
+    }
+
+    &__input {
+        position: absolute;
+        left: -1000em;
+        opacity: 0;
+        width: 0;
+        outline: none;
+        display: none;
+
+        &:checked + .checkbox__label {
+            &::before {
+                background-color: var(--green);
+            }
+
+            .checkbox__icon {
+                display: block;
+            }
+        }
+
+        &:disabled + .checkbox__label {
+            cursor: not-allowed;
+        }
+
+        &:disabled:checked + .checkbox__label {
+            cursor: pointer;
+        }
+
+        &:disabled + .checkbox__label:hover::before {
+            background-color: var(--gray_90);
+        }
+
+        &:focus + .checkbox__label::before {
+            box-shadow: inset 0 0 0 1px var(--green);
+        }
+    }
+
+    &__label {
+        display: inline-block;
+        position: relative;
+        font-size: inherit;
+        font-family: var(--base-font-family);
+        font-weight: var(--base-font-weight);
+        outline: none;
+        margin: 0;
+        padding-left: 10px;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+            &::before {
+                background-color: var(--gray_85);
+            }
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            width: 16px;
+            height: 16px;
+            top: 1px;
+            background-color: var(--gray_90);
+            transition: var(--tr_time);
+        }
+    }
+
+    &__label-count {
+        color: var(--gray_50);
+        margin-left: 5px;
+    }
+
+    &__icon {
+        display: none;
+        position: absolute;
+        top: 1px;
+        left: -14px;
+        fill: var(--white);
+    }
+}
+
+.checkbox-list {
+    .checkbox {
+        margin-bottom: 8px;
+    }
+}

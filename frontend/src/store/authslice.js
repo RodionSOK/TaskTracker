@@ -61,6 +61,7 @@ const initialState = {
     user: JSON.parse(localStorage.getItem('user')) || null,
     isLoading: false,
     error: null,
+    isAuthenticated: false,
 };
 
 const authSlice = createSlice({
@@ -75,6 +76,9 @@ const authSlice = createSlice({
         },
         clearError: (state) => {
             state.error = null;
+        },
+        setAuthentificated: (state, action) => {
+            state.isAuthenticated = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -92,6 +96,7 @@ const authSlice = createSlice({
                 state.user = user;
                 state.isLoading = false;
                 state.error = null;
+                state.isAuthenticated = true;
 
                 localStorage.setItem('accessToken', access);
                 localStorage.setItem('refreshToken', refresh);
@@ -100,6 +105,7 @@ const authSlice = createSlice({
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload || action.error.message;
+                state.isAuthenticated = false;
             })
             .addCase(refreshToken.pending, (state) => {
                 state.isLoading = true;
@@ -112,6 +118,7 @@ const authSlice = createSlice({
                 state.user = user;
                 state.isLoading = false;
                 state.error = null;
+                state.isAuthenticated = true;
 
                 localStorage.setItem('accessToken', access);
                 localStorage.setItem('user', JSON.stringify(user));
@@ -120,8 +127,9 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload || action.error.message;
                 localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToke');
+                localStorage.removeItem('refreshToken');
                 localStorage.removeItem('user');
+                state.isAuthenticated = false;
             }) 
             .addCase(checkAuth.pending, (state) => {
                 state.isLoading = true;
@@ -131,13 +139,15 @@ const authSlice = createSlice({
                 state.refreshToken = action.payload.refreshToken;
                 state.user = action.payload.user;
                 state.isLoading = false;
+                state.isAuthenticated = true;
             })
             .addCase(checkAuth.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message;
+                state.isAuthenticated = false;
             });
     }
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, clearError, setAuthentificated } = authSlice.actions;
 export default authSlice.reducer; 

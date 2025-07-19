@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`checkbox with error 1`] = `
+<div
+  className="checkbox checkbox_error"
+  onClick={undefined}
+>
+  <input
+    checked={undefined}
+    className="checkbox__input"
+    defaultChecked={undefined}
+    disabled={undefined}
+    id="basic-checkbox-default"
+    onBlur={undefined}
+    onChange={undefined}
+    tabIndex="1"
+    type="checkbox"
+    value={undefined}
+  />
+  <label
+    className="checkbox__label"
+    htmlFor="basic-checkbox-default"
+  >
+    <svg
+      className="icon checkbox__icon"
+      height="14"
+      id={undefined}
+      onClick={undefined}
+      width="14"
+    >
+      <use
+        xlinkHref="#mail-check"
+      />
+    </svg>
+    Серый чекбокс
+  </label>
+</div>
+`;
+
+exports[`checkbox with white theme 1`] = `
+<div
+  className="checkbox checkbox_white"
+  onClick={undefined}
+>
+  <input
+    checked={undefined}
+    className="checkbox__input"
+    defaultChecked={undefined}
+    disabled={undefined}
+    id="white-checkbox-default"
+    onBlur={undefined}
+    onChange={undefined}
+    tabIndex="1"
+    type="checkbox"
+    value={undefined}
+  />
+  <label
+    className="checkbox__label"
+    htmlFor="white-checkbox-default"
+  >
+    <svg
+      className="icon checkbox__icon"
+      height="14"
+      id={undefined}
+      onClick={undefined}
+      width="14"
+    >
+      <use
+        xlinkHref="#mail-check"
+      />
+    </svg>
+    Белый чекбокс
+  </label>
+</div>
+`;
+
+exports[`default checkbox 1`] = `
+<div
+  className="checkbox"
+  onClick={undefined}
+>
+  <input
+    checked={undefined}
+    className="checkbox__input"
+    defaultChecked={undefined}
+    disabled={undefined}
+    id="basic-checkbox-default"
+    onBlur={undefined}
+    onChange={undefined}
+    tabIndex="1"
+    type="checkbox"
+    value={undefined}
+  />
+  <label
+    className="checkbox__label"
+    htmlFor="basic-checkbox-default"
+  >
+    <svg
+      className="icon checkbox__icon"
+      height="14"
+      id={undefined}
+      onClick={undefined}
+      width="14"
+    >
+      <use
+        xlinkHref="#mail-check"
+      />
+    </svg>
+    Серый чекбокс
+  </label>
+</div>
+`;

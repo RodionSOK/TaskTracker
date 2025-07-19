@@ -1,0 +1,32 @@
+.preloader {
+    animation-name: smoothRender, animatePreloadView;
+    animation-duration: var(--tr_time), 1.5s;
+    animation-delay: 0ms, var(--tr_time);
+    animation-fill-mode: forwards, forwards;
+    animation-iteration-count: 1, infinite;
+    animation-timing-function: linear, linear;
+    background: var(--gray_95);
+    background: linear-gradient(135deg, var(--gray_95) 45%, var(--gray_90) 50%, var(--gray_95) 55%);
+    background-size: 200% 200%;
+    background-repeat: no-repeat;
+    min-height: 50px;
+    height: 100%;
+    display: block;
+    box-shadow: inset 0 0 20px 5px #fff;
+}
+
+@keyframes animatePreloadView {
+    0% {
+        opacity: 40%;
+        background-position: 100% 100%;
+    }
+
+    50% {
+        opacity: 100%;
+    }
+
+    100% {
+        opacity: 40%;
+        background-position: 0 0;
+    }
+}

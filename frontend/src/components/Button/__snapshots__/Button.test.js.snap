@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button default 1`] = `
+<button
+  className="button"
+  disabled={undefined}
+  onClick={[Function]}
+>
+  button
+</button>
+`;
+
+exports[`Button disabled 1`] = `
+<button
+  className="button"
+  disabled={true}
+  onClick={[Function]}
+>
+  button
+</button>
+`;
+
+exports[`Button full width 1`] = `
+<button
+  className="button button_wide"
+  disabled={undefined}
+  onClick={[Function]}
+>
+  button
+</button>
+`;
+
+exports[`Button inactive 1`] = `
+<button
+  className="button button_inactive"
+  disabled={undefined}
+  onClick={[Function]}
+>
+  button
+</button>
+`;
+
+exports[`Button small size  1`] = `
+<button
+  className="button button_small"
+  disabled={undefined}
+  onClick={[Function]}
+>
+  button
+</button>
+`;
+
+exports[`Button with gray theme 1`] = `
+<button
+  className="button button_gray"
+  disabled={undefined}
+  onClick={[Function]}
+>
+  button
+</button>
+`;
+
+exports[`Button with gray theme, small size 1`] = `
+<button
+  className="button button_small button_gray"
+  disabled={undefined}
+  onClick={[Function]}
+>
+  button
+</button>
+`;
