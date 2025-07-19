@@ -1,0 +1,44 @@
+@import "settings.pcss";
+
+html {
+    overflow: hidden;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+}
+
+a {
+    color: var(--green);
+
+    &:visited {
+        color: var(--green_dark);
+    }
+
+    &:hover {
+        color: var(--green_dark);
+    }
+}
+
+body {
+    font-size: var(--base-font-size);
+    font-family: var(--base-font-family);
+    font-weight: var(--base-font-weight);
+    background-color: var(--white);
+    color: var(--black);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+::selection {
+    color: var(--white);
+    background-color: rgba(26, 102, 255, 0.996);
+}
+
+.nobr {
+    white-space: nowrap;
+}

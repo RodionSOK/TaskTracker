@@ -1,0 +1,317 @@
+@import "/src/styles/settings.pcss";
+
+.input {
+    position: relative;
+    animation: var(--render_time) smoothRender 1;
+
+    &__wrapp {
+        position: relative;
+
+        &_required {
+            &:after {
+                content: "*";
+                position: absolute;
+                color: var(--gray_70);
+                font-size: 18px;
+                line-height: 1;
+                top: 5px;
+                right: 5px;
+            }
+        }
+
+        &_success {
+            &.input__wrapp_required::after {
+                display: none;
+            }
+
+            .input__input {
+                padding-right: 40px;
+            }
+        }
+
+        &_currency {
+            .input__input {
+                padding-right: 35px;
+            }
+        }
+    }
+
+    &__input {
+        box-sizing: border-box;
+        padding: 14px 0 0 17px;
+        border: none;
+        border-radius: 0;
+        -webkit-appearance: none;
+        outline: none;
+        box-shadow: none;
+        font-size: 14px;
+        line-height: 1;
+        color: var(--black);
+        position: relative;
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        height: 50px;
+        font-family: var(--base-font-family);
+        background-color: var(--white);
+
+        &_header {
+            height: 60px;
+            background-color: #262626 !important;
+
+            color: #ffffff;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 18px;
+
+            &:focus {
+                border: none !important;
+                padding-left: 17px !important;
+            }
+        }
+
+        &:-ms-input-placeholder {
+            color: transparent;
+        }
+
+        &::placeholder {
+            color: gray;
+        }
+
+        &::-ms-clear {
+            display: none;
+        }
+
+        &::-ms-reveal {
+            display: none;
+        }
+
+        /* hack to override the yellow background browser in auto-filling fields */
+        &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 25px var(--white) inset;
+        }
+
+        &:focus {
+            padding-left: 16px;
+            border: 1px solid var(--green);
+
+            &::placeholder {
+                color: var(--black);
+            }
+
+            & + .input__placeholder {
+                top: 7px;
+                transform: translateY(0);
+                font-size: 11px;
+            }
+
+            & + .input__placeholder_header {
+                color: var(--gray_90) !important;
+            }
+
+            & + .input__placeholder + .input__hint {
+                display: block;
+            }
+
+            & ~ .input__currency {
+                display: block;
+            }
+        }
+
+        &:disabled {
+            background-color: var(--gray_90);
+            cursor: not-allowed;
+        }
+
+        &[type="password"] {
+            letter-spacing: 5px;
+        }
+
+        &[type="tel"] {
+            padding-left: 24px;
+
+            &:focus + .input__placeholder::before {
+                content: "+";
+                position: absolute;
+                bottom: -21px;
+                left: 0;
+                color: var(--black);
+                font-size: 14px;
+                line-height: 1;
+            }
+        }
+
+        &_not-empty {
+            & + .input__placeholder {
+                top: 7px;
+                transform: translateY(0);
+                font-size: 11px;
+            }
+
+            &[type="tel"] + .input__placeholder::before {
+                content: "+";
+                position: absolute;
+                bottom: -21px;
+                left: 0;
+                color: var(--black);
+                font-size: 14px;
+                line-height: 1;
+            }
+
+            & ~ .input__currency {
+                display: block;
+            }
+        }
+
+        &_error {
+            padding-left: 16px;
+            border: 1px solid var(--error);
+        }
+
+        &_success {
+            &:after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 3px;
+                height: 6px;
+                transform: translate(6px, 4px) rotate(45deg);
+                border: 0 solid #fff;
+                border-width: 0 1px 1px 0;
+                display: none;
+            }
+        }
+
+        &_gray {
+            background-color: var(--gray_95);
+
+            &:focus {
+                border: 1px solid var(--gray_80);
+            }
+
+            &:disabled {
+                color: var(--gray_50);
+                background-color: var(--gray_90);
+            }
+
+            &:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0 25px var(--gray_95) inset;
+            }
+        }
+
+        &_white-with-border {
+            height: 50px;
+            border: 1px solid var(--gray_90);
+            padding-right: 14px;
+            padding-left: 14px;
+
+            &::placeholder {
+                color: var(--gray_70);
+            }
+
+            &:focus {
+                padding-right: 14px;
+                padding-left: 14px;
+                box-shadow: none;
+                border-color: var(--gray_70);
+
+                &::placeholder {
+                    color: transparent;
+                }
+            }
+
+            &:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0 20px var(--white) inset;
+            }
+        }
+
+        &_small-gray {
+            height: 40px;
+            background-color: var(--gray_95);
+            border: 1px solid var(--gray_95);
+            padding: 10px 14px;
+
+            &::placeholder {
+                color: var(--gray_70);
+            }
+
+            &:focus {
+                padding: 10px 14px;
+                box-shadow: none;
+                border-color: var(--gray_95);
+
+                &::placeholder {
+                    color: transparent;
+                }
+            }
+
+            &:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0 20px var(--gray_95) inset;
+            }
+        }
+    }
+
+    &__placeholder {
+        position: absolute;
+        left: 17px;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--base-font-family);
+        font-size: 14px;
+        color: var(--gray_70);
+        pointer-events: none;
+        transition: var(--tr_time);
+    }
+
+    &__placeholder_header {
+        color: #ffffff !important;
+        font-style: normal;
+        font-weight: 400 !important;
+        font-size: 15px !important;
+        line-height: 18px !important;
+    }
+
+    &__error {
+        font-size: 12px;
+        line-height: 18px;
+        margin-top: 6px;
+        color: var(--error);
+        font-family: var(--base-font-family);
+        opacity: 1;
+        animation: showHint 0.3s ease-in-out;
+    }
+
+    &__hint {
+        font-size: 12px;
+        line-height: 18px;
+        margin-top: 6px;
+        font-family: var(--base-font-family);
+        color: var(--black);
+        opacity: 1;
+        animation: showHint 0.3s ease-in-out;
+        z-index: 1;
+        display: none;
+    }
+
+    &__icon {
+        &_success {
+            fill: var(--green);
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+        }
+    }
+
+    &__currency {
+        position: absolute;
+        right: 15px;
+        top: 26px;
+        font-size: 14px;
+        line-height: 1;
+        display: none;
+    }
+}
