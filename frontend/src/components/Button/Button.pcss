@@ -30,19 +30,6 @@
         box-shadow: inset 0 0 0 1px var(--green-dark);
     }
 
-    &_gray {
-        color: var(--black);
-        background-color: var(--gray_90);
-
-        &:hover {
-            background-color: var(--gray_85);
-        }
-
-        &:focus {
-            box-shadow: inset 0 0 0 1px var(--gray_85);
-        }
-    }
-
     &:disabled,
     &_inactive {
         color: var(--gray_50);
@@ -65,21 +52,36 @@
         padding: 9px 19px;
     }
 
-    &_black {
-        background-color: var(--gray_15);
-
-        &:hover {
-            background-color: var(--gray_5);
-        }
-
-        &:focus {
-            outline: none;
-            box-shadow: inset 0 0 0 1px var(--gray_0);
-        }
-    }
-
     &_wide {
         width: 100%;
+    }
+}
+
+.button.button_black {
+    
+    background-color: var(--gray_15);
+
+    &:hover {
+        background-color: var(--gray_5);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: inset 0 0 0 1px var(--gray_0);
+    }
+}
+
+.button.button_gray {
+
+    color: var(--black);
+    background-color: var(--gray_90);
+
+    &:hover {
+        background-color: var(--gray_85);
+    }
+
+    &:focus {
+        box-shadow: inset 0 0 0 1px var(--gray_85);
     }
 }
 

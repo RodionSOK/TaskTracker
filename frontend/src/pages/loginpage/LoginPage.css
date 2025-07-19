@@ -1,0 +1,106 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+.loginpage-root {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    overflow: hidden;
+}
+
+.loginpage-container {
+    width: 100%;
+    max-width: 340px;
+    padding: 0 16px;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loginpage-brand {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #222;
+    text-align: center;
+}
+
+.loginpage-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.loginpage-form input,
+.loginpage-form button,
+.loginpage-form [type="submit"] {
+    width: 100%;
+    height: 48px;
+    font-size: 18px;
+    padding: 0 14px;
+    box-sizing: border-box;
+}
+
+.loginpage-links-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.loginpage-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.loginpage-input-icon {
+    position: absolute;
+    left: 12px;
+    top: 25px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #bbb;
+    z-index: 2;
+}
+
+.loginpage-input-wrapper input,
+.loginpage-input-wrapper .input__input {
+    padding-left: 40px;
+    color: #222;
+}
+
+.button .load-spinner {
+    width: 16px;
+    height: 16px;
+    position: relative;
+}
+
+.button .load-spinner div {
+    transform-origin: 16px 16px !important;
+}
+
+.button .load-spinner div:after {
+    top: 4px !important;
+    left: 14px !important;
+    width: 2px !important;
+    height: 6px !important;
+}
