@@ -23,7 +23,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate("/");
+            navigate("/tasks");
         }
     }, [isAuthenticated, navigate]);
 
@@ -80,10 +80,10 @@ const LoginPage = () => {
                     </Button>
                 </form>
                 <div className="loginpage-links-row">
-                    <Link to="/forgot-password" theme="simple" className="loginpage-link-left">
+                    <Link href="/forgot-password" theme="simple" className="loginpage-link-left">
                         Забыли пароль?
                     </Link>
-                    <Link to="/signup" theme="simple" className="loginpage-link-right">
+                    <Link href="/register" theme="simple" className="loginpage-link-right">
                         Создать аккаунт
                     </Link>
                 </div>

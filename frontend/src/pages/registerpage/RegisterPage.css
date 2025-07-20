@@ -11,28 +11,27 @@ html, body {
     box-sizing: inherit;
 }
 
-.loginpage-root {
+.registerpage-root {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #fff;
-    overflow: hidden;
 }
 
-.loginpage-container {
+.registerpage-container {
     width: 100%;
     max-width: 340px;
     padding: 0 16px;
-    background: none;
-    border-radius: 0;
-    box-shadow: none;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: none;
+    border-radius: 0;
+    box-shadow: 0;
 }
 
-.loginpage-brand {
+.registerpage-brand {
     font-family: 'Rubik', sans-serif;
     font-weight: 700;
     font-size: 28px;
@@ -41,16 +40,17 @@ html, body {
     text-align: center;
 }
 
-.loginpage-form {
+.registerpage-form {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
-.loginpage-form input,
-.loginpage-form button,
-.loginpage-form [type="submit"] {
+
+.registerpage-form input,
+.registerpage-form button,
+.registerpage-form [type="submit"] {
     width: 100%;
     height: 48px;
     font-size: 18px;
@@ -58,20 +58,17 @@ html, body {
     box-sizing: border-box;
 }
 
-.loginpage-links-row {
-    width: 100%;
+.registerpage-passwords-group {
     display: flex;
-    justify-content: space-between;
-    margin-top: 18px;
-    font-size: 14px;
+    flex-direction: column;
 }
 
-.loginpage-input-wrapper {
+.registerpage-input-wrapper {
     position: relative;
     width: 100%;
 }
 
-.loginpage-input-icon {
+.registerpage-input-icon {
     position: absolute;
     left: 12px;
     top: 25px;
@@ -81,10 +78,18 @@ html, body {
     z-index: 2;
 }
 
-.loginpage-input-wrapper input,
-.loginpage-input-wrapper .input__input {
+.registerpage-input-wrapper input,
+.registerpage-input-wrapper .input__input {
     padding-left: 40px;
     color: #222;
+}
+
+.registerpage-links-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+    font-size: 14px;
 }
 
 .button .load-spinner {
