@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from './pages/loginpage/LoginPage';
 import ProtectedRoute from "./shared/ProtectedRoute";
 import RegisterPage from './pages/registerpage/RegisterPage';
+import ForgotPasswordPage from './pages/forgotpasswordpage/ForgotpasswordPage';
+import ResetPasswordPage from './pages/resetpasswordpage/ResetPasswordPage';
 // import Dashboard from './pages/Dashboard'; 
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
           <Route path='/tasks' />
         </Route>
         <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </Router>
   );

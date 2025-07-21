@@ -91,20 +91,15 @@ html, body {
     margin-top: 18px;
     font-size: 14px;
 }
-
-.button .load-spinner {
-    width: 16px;
-    height: 16px;
-    position: relative;
-}
-
-.button .load-spinner div {
-    transform-origin: 16px 16px !important;
-}
-
-.button .load-spinner div:after {
-    top: 4px !important;
-    left: 14px !important;
-    width: 2px !important;
-    height: 6px !important;
+/* .button .load-spinner {
+    transform: scale(1.5) !important;
+    left: -25px !important;
+    top: -24px !important;
+    position: relative !important;
+} */
+.registerpage-error {
+    color: #ef4d4d;
+    width: 100%;
+    font-size: 18px;
+    padding: 0 55px;
 }

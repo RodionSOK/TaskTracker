@@ -47,6 +47,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'password1', 'password2', 'first_name', 'last_name']
 
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError({"password2": "Different passwords."})
+        return data
+
     def create(self, validated_data):
         validated_data.pop('password2')
 

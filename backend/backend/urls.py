@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
-from testApp.views import TaskViewSet, CategoryViewSet, ProjectViewSet, RegisterView
+from testApp.views import ForgotPasswordView, ResetPasswordView, TaskViewSet, CategoryViewSet, ProjectViewSet, RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +32,8 @@ urlpatterns = [
     path('api/v1/categories/', CategoryViewSet.as_view()),
     path('api/v1/categories/<int:pk>/', CategoryViewSet.as_view()),
     path('api/v1/tasks/', TaskViewSet.as_view()),
-    path('api/v1/tasks/<int:pk>/', TaskViewSet.as_view())
+    path('api/v1/tasks/<int:pk>/', TaskViewSet.as_view()), 
+
+    path('api/v1/forgot_password/', ForgotPasswordView.as_view()),
+    path('api/v1/reset-password/', ResetPasswordView.as_view())
 ]

@@ -8,14 +8,15 @@ import Link from "../../components/Link/Link";
 import Input from "../../components/Input/Input";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 import Icon from "../../components/Icon/Icon";
-import LoginSpinner from "../../shared/preload/LoadSpinner/LoadSpinner"
 import "./LoginPage.css";
+import LoadSpinner from "../../shared/preload/LoadSpinner/LoadSpinner";
 
 const LoginPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const isLoading = useSelector(state => state.auth.isLoading);
+    const error = useSelector(state => state.auth.error);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -74,9 +75,18 @@ const LoginPage = () => {
                             type="password"
                             theme="white-with-border"
                         />
+                        {error && (
+                            <div className="loginpage-error">
+                            {typeof error === "string"
+                                ? error
+                                : error.detail
+                                ? error.detail
+                                : JSON.stringify(error)}
+                            </div>
+                        )}
                     </div>
                     <Button type="submit" size="medium" wide theme="gray" disabled={isLoading}>
-                        {isLoading ? <LoginSpinner /> : "Войти"}
+                        {isLoading ? <LoadSpinner className="load-spinner"/> : "Войти"}
                     </Button>
                 </form>
                 <div className="loginpage-links-row">

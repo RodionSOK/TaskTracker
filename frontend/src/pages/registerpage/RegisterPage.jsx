@@ -16,6 +16,7 @@ const RegisterPage = () => {
     const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const isLoading = useSelector(state => state.auth.isLoading);
+    const error = useSelector(state => state.auth.error);
     const [formData, setFormData] = useState({
         email: '',
         password1: '',
@@ -46,7 +47,7 @@ const RegisterPage = () => {
             password2: formData.password2,
             first_name: formData.first_name,
             last_name: formData.last_name,
-        }));
+        }));    
     };
 
     return (
@@ -117,6 +118,15 @@ const RegisterPage = () => {
                                 type="password"
                                 theme="white-with-border"
                             />
+                            {error && (
+                            <div className="registerpage-error">
+                                {typeof error === "string"
+                                ? error
+                                : error.password2
+                                    ? error.password2
+                                    : JSON.stringify(error)}
+                            </div>
+                            )}
                         </div>
                     </div>
                     <Button type="submit" size="medium" wide theme="gray" disabled={isLoading}>
