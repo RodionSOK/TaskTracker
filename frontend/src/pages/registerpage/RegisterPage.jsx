@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../store/authslice";
 import { useNavigate } from "react-router-dom";
+import { clearError } from "../../store/authslice";
 
 import Button from "../../components/Button/Button";
 import Link from "../../components/Link/Link";
@@ -13,6 +14,13 @@ import "./RegisterPage.css";
 
 const RegisterPage = () => {
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        return() => {
+            dispatch(clearError());
+        };
+    }, [dispatch]);
+
     const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const isLoading = useSelector(state => state.auth.isLoading);

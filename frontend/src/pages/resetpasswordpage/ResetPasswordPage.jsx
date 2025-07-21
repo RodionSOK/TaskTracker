@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { completePasswordReset, clearError } from "../../store/authslice";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -12,6 +12,13 @@ import "./ResetPasswordPage.css";
 
 const ResetPasswordPage = () => {
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        return() => {
+            dispatch(clearError());
+        };
+    }, [dispatch]);
+
     const navigate = useNavigate();
     const isLoading = useSelector(state => state.auth.isLoading);
     const error = useSelector(state => state.auth.error);

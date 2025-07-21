@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch , useSelector } from 'react-redux';
-import { loginUser } from "../../store/authslice";
+import { loginUser, clearError } from "../../store/authslice";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../../components/Button/Button";
@@ -13,6 +13,13 @@ import LoadSpinner from "../../shared/preload/LoadSpinner/LoadSpinner";
 
 const LoginPage = () => {
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        return() => {
+            dispatch(clearError());
+        };
+    }, [dispatch]);
+
     const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const isLoading = useSelector(state => state.auth.isLoading);

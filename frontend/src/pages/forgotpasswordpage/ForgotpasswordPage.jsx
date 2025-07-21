@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch} from 'react-redux';
 import { requestPasswordReset, clearError } from '../../store/authslice';
 
@@ -12,6 +12,13 @@ import "./ForgotPasswordPage.css";
 const  ForgotPasswordPage = () => {
     const [email, setEmail] = useState('');
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        return() => {
+            dispatch(clearError());
+        };
+    }, [dispatch]);
+
     const isLoading = useSelector(state => state.auth.isLoading);
     const error = useSelector(state => state.auth.error);
     const emailSentTo = useSelector((state) => state.auth.emailSentTo);
