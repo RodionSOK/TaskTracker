@@ -3,12 +3,17 @@ from django.utils.encoding import force_bytes
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.conf import settings
+
 from .models import Task, Category, Project, User
-from .serialiers import TaskSerializer, CategorySerializer, UserSerializer, ProjectSerializer
+from .serialiers import TaskSerializer, CategorySerializer, UserSerializer, ProjectSerializer, MyTokenObtainPairSerializer
 from smtplib import SMTPDataError
+
+class MyTokenObtainPairView(TokenObtainPairView):
+       serializer_class = MyTokenObtainPairSerializer
 
 class ForgotPasswordView(APIView):
     def post(self, request):

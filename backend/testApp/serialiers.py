@@ -1,6 +1,17 @@
 from rest_framework import serializers 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Task, Category, User, Project
 from django.contrib.auth.hashers import make_password
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+       @classmethod
+       def get_token(cls, user):
+           token = super().get_token(user)
+           # Добавьте нужные поля:
+           token['first_name'] = user.first_name
+           token['email'] = user.email
+           token['last_name'] = user.last_name
+           return token
 
 class TaskSerializer(serializers.ModelSerializer):
     def create(self, validated_data):

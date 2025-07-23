@@ -4,11 +4,13 @@ import './index.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
 import authSlice from './store/authslice.js'
+import projectslice from './store/projectslice.js'
 import { configureStore } from '@reduxjs/toolkit'
 
 const store = configureStore({
   reducer: {
     auth: authSlice,
+    projects: projectslice,
   }
 })
 
