@@ -11,12 +11,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
         <Route element={<ProtectedRoute />}>
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
 
           <Route path="/tasks" element={<HomePage />} />
           <Route path='/start' element={<StartPage />} />
