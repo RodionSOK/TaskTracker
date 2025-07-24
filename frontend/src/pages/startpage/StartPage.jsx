@@ -19,6 +19,9 @@ const StartPage = () => {
     const projectList = Array.isArray(projects.projects) ? projects.projects : [];
     const user = useSelector(state => state.auth.user);
 
+    // Получаем инициалы пользователя
+    const initials = user ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase() : '?';
+
     useEffect(() => {
         dispatch(fetchProjects());
     }, [dispatch]);
@@ -27,12 +30,9 @@ const StartPage = () => {
         <div className="startpage-root">
             <aside className="startpage-sidebar">
                 <div className="startpage-profile">
-                    <div className="startpage-useremail">
-                        {user?.email || "?"}
-                    </div>
-                    <div className="startpage-userlast_name">
-                        {user?.last_name + ' ' + user?.first_name || "?"}
-                    </div>
+                    <div className="startpage-avatar">{initials}</div>
+                    <div className="startpage-username">{user ? `${user.first_name} ${user.last_name}` : 'Имя Фамилия'}</div>
+                    <div className="startpage-useremail">{user?.email || 'email@domain.com'}</div>
                 </div>
                 <nav className="startpage-menu">
                 {sidebarMenu.map((item) => (
