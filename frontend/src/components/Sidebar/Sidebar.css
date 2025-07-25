@@ -1,0 +1,115 @@
+.startpage-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: #fff;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.07);
+    width: 220px;
+    transition: width 0.2s;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 24px;
+}
+
+.startpage-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.startpage-avatar {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.startpage-username,
+.startpage-useremail {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 2px;
+    transition: opacity 0.2s, width 0.2s;
+}
+
+.startpage-menu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.startpage-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    width: 90%;
+    border-radius: 0;
+    transition: background 0.2s;
+    color: #333;
+}
+
+.startpage-menu-item:hover {
+    background: #f5f5f5;
+}
+
+.startpage-menu-item svg {
+    min-width: 22px;
+    min-height: 22px;
+    color: #555;
+}
+
+.startpage-menu-item span {
+    font-size: 15px;
+    transition: opacity 0.2s, width 0.2s;
+    white-space: nowrap;
+}
+
+.startpage-sidebar.collapsed {
+    width: 60px;
+    box-shadow: 1px 0 4px rgba(0,0,0,0.04);
+    padding-top: 16px;
+    align-items: center;
+}
+
+.startpage-sidebar.collapsed .startpage-profile {
+    margin-bottom: 16px;
+}
+
+.startpage-sidebar.collapsed .startpage-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.startpage-sidebar.collapsed .startpage-menu {
+    align-items: center;
+}
+
+.startpage-sidebar.collapsed .startpage-menu-item {
+    justify-content: center;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.startpage-sidebar.collapsed .startpage-menu-item svg {
+    min-width: 22px;
+    min-height: 22px;
+}
+
+.startpage-sidebar.collapsed .startpage-menu-item span {
+    display: none;
+}
