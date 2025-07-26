@@ -1,7 +1,9 @@
+@import '../../styles/settings.pcss';
+
 .startpage-root {
   display: flex;
   min-height: 100vh;
-  background: #f7f8fa;
+  background: var(--gray_95);
 }
 
 .startpage-profile {
@@ -14,14 +16,14 @@
 .startpage-avatar {
   width: 64px;
   height: 64px;
-  background: #e0e2ea;
+  background: var(--gray_85);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 32px;
   font-weight: 700;
-  color: #6a6a6a;
+  color: var(--gray_50);
   margin-bottom: 12px;
 }
 
@@ -29,11 +31,12 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 2px;
+  color: var(--gray_20);
 }
 
 .startpage-useremail {
   font-size: 14px;
-  color: #888;
+  color: var(--gray_50);
 }
   
 .startpage-menu {
@@ -66,6 +69,7 @@
 .startpage-title {
   font-size: 28px;
   font-weight: 700;
+  color: var(--gray_20);
 }
 
 .startpage-header-actions {
@@ -94,11 +98,33 @@
   transform: translateY(-50%);
   pointer-events: none;
 }
-
 .startpage-filters {
   display: flex;
-  gap: 10px;
-  margin-bottom: 18px;
+}
+
+.startpage-filter {
+  font-size: 16px;
+  color: var(--gray_50);
+  cursor: pointer;
+  padding: 16px 32px;
+  user-select: none;
+}
+
+.startpage-filter:hover {
+  color: var(--gray_20);
+  background: var(--gray_95);
+}
+
+.startpage-filter.active {
+  color: var(--gray_20);
+  background: var(--gray_90);
+  font-weight: 500;
+}
+
+.startpage-divider {
+  height: 1px;
+  background: var(--gray_85);
+  margin-bottom: 24px;
 }
 .startpage-projects {
   flex: 1 1 auto;

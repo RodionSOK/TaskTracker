@@ -45,7 +45,12 @@ const StartPage = () => {
     const projectList = Array.isArray(projects.projects) ? projects.projects : [];
     const user = useSelector(state => state.auth.user);
 
+    const [activeFilter, setActiveFilter] = useState('Все');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+
+    const handleFilterClick = (filter) => {
+        setActiveFilter(filter);
+    };
 
     const handleMenuClick = (label) => {
         switch (label) {
@@ -101,20 +106,22 @@ const StartPage = () => {
             <main className="startpage-main">
                 <header className="startpage-header">
                     <h1 className="startpage-title">Мои проекты</h1>
-                    <div className="startpage-header-actions">
-                        <Button theme="gray" size="medium">Создать проект</Button>
-                        <div className="startpage-search-wrapper">
-                        <input className="startpage-search" placeholder="Поиск проектов..." />
-                        <Icon type="search" width="20" height="20" className="startpage-search-icon" />
-                        </div>
-                    </div>
                 </header>
                 <div className="startpage-filters">
-                    <Button size="small" theme="gray">Все</Button>
-                    <Button size="small" theme="gray">Мои</Button>
-                    <Button size="small" theme="gray">Избранные</Button>
-                    <Button size="small" theme="gray">Архив</Button>
+                    <span 
+                        className={`startpage-filter ${activeFilter === 'all' ? 'active' : ''}`}
+                        onClick={() => handleFilterClick('all')}
+                    >
+                        Все
+                    </span>
+                    <span 
+                        className={`startpage-filter ${activeFilter === 'favorites' ? 'active' : ''}`}
+                        onClick={() => handleFilterClick('favorites')}
+                    >
+                        Избранные
+                    </span>
                 </div>
+                <div className="startpage-divider"></div>
                 <section className="startpage-projects">
                     {isLoading ? (
                         <div className="startpage-loading">Загрузка проектов...</div>
