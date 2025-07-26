@@ -1,70 +1,81 @@
+@import "../../styles/settings.pcss";
+
 .create-project-modal {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  .create-project-form {
-    background: #fff;
-    border-radius: 12px;
-    padding: 32px 24px;
-    min-width: 320px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .create-project-form label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 15px;
-    color: var(--gray_20);
-  }
-  .create-project-form input,
-  .create-project-form textarea {
-    border: 1px solid var(--gray_85);
-    border-radius: 6px;
-    padding: 8px;
-    font-size: 15px;
-    margin-top: 2px;
-  }
-  .create-project-form textarea {
-    min-height: 60px;
-    resize: vertical;
-  }
-  .form-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-  }
-  .form-error {
-    color: #d32f2f;
-    font-size: 14px;
-  }
-  .invite-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 8px 0;
-  }
-  .invite-item {
-    background: var(--gray_90);
-    color: var(--gray_20);
-    border-radius: 12px;
-    padding: 4px 10px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .invite-item button {
-    background: none;
-    border: none;
-    color: var(--gray_50);
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0 2px;
-  }
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.create-project-form {
+  background: #fff;
+  padding: 32px 28px 24px 28px;
+  min-width: 340px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 540px;
+}
+
+.create-project-form h2 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  color: var(--gray_20);
+  font-weight: 700;
+}
+
+.create-project-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+  color: var(--gray_20);
+}
+
+.create-project-form input,
+.create-project-form [type="submit"] {
+  width: 485px;
+  height: 48px;
+  font-size: 18px;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+.create-project-form .input__wrapper {
+  position: relative;
+  width: 100%;
+}
+.create-project-form .input__input {
+  padding-left: 10px;
+  color: #222;
+}
+
+.form-actions .button {
+   width: 100%;
+  height: 48px;
+  font-size: 18px;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+.create-project-form .input:focus {
+  border-color: var(--gray_70);
+  background: #fff;
+}
+
+.form-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.form-error {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-top: 2px;
+}

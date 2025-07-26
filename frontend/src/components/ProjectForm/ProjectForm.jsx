@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+
+import Input from '../Input/Input';
+import Button from '../Button/Button';
 import './ProjectForm.css'
 
 const ProjectForm = ({ onCreate, onClose }) => {
@@ -46,24 +49,30 @@ const ProjectForm = ({ onCreate, onClose }) => {
             <h2>Создать проект</h2>
             <label>
                 Название проекта
-                <input
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-                placeholder="Введите название"
+                <Input
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                    nativePlaceholder="Введите название"
+                    name="projectName"
+                    theme="white-with-border"
+                    wide={true}
                 />
             </label>
             <label>
-                Пригласить пользователей (email)
+                Пригласить пользователя (email)
                 <div style={{ display: 'flex', gap: 8 }}>
-                    <input
-                    type="email"
-                    value={inviteEmail}
-                    onChange={e => setInviteEmail(e.target.value)}
-                    placeholder="Введите email"
+                    <Input
+                        type="email"
+                        value={inviteEmail}
+                        onChange={e => setInviteEmail(e.target.value)}
+                        nativePlaceholder="Введите email"
+                        name="inviteEmail"
+                        theme="white-with-border"
+                        wide={true}
                     />
-                    <button type="button" onClick={handleAddInvite}>Добавить</button>
+                    {/* <Button type="button" theme="gray" size="small" onClick={handleAddInvite}>+</Button> */}
                 </div>
             </label>
             {invites.length > 0 && (
@@ -78,8 +87,8 @@ const ProjectForm = ({ onCreate, onClose }) => {
             )}
             {error && <div className="form-error">{error}</div>}
             <div className="form-actions">
-                <button type="submit">Создать</button>
-                <button type="button" onClick={onClose}>Отмена</button>
+                <Button type="submit" theme="black" size="medium">Создать</Button>
+                <Button type="button" theme="gray" size="medium" onClick={onClose}>Отмена</Button>
             </div>
         </form>
       </div>
