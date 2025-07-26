@@ -36,9 +36,18 @@ class User(AbstractBaseUser,PermissionsMixin):
 class  Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
+    is_favorite = models.BooleanField(default=False) 
 
     def __str__(self):
         return self.name
+    
+    @property
+    def tasks_total(self):
+        return self.task_set.count()
+    
+    @property
+    def tasks_completed(self):
+        return self.task_set.filter(is_done=True).count()
     
 class Category(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -52,11 +61,12 @@ class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     date_create = models.DateTimeField(auto_now_add=True)
-    date_deadline = models.DateTimeField(blank=True)
+    date_deadline = models.DateTimeField(blank=True, null=True)
     is_done = models.BooleanField(default=False)
     is_started = models.BooleanField(default=False)
     by_who = models.CharField(max_length=100, default='')
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.title

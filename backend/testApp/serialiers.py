@@ -98,18 +98,23 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['project', 'name', 'color']
 
 class ProjectSerializer(serializers.ModelSerializer):
+    tasks_total = serializers.IntegerField(read_only=True)
+    tasks_completed = serializers.IntegerField(read_only=True)
+    
     def create(self, validated_data):
         return Project.objects.create(
             user=validated_data['user'],
             name=validated_data["name"],
+            is_favorite=validated_data["is_favorite"],
         )
     
     def update(self, instance, validated_data):
         instance.name = validated_data.get("name", instance.name)
+        instance.is_favorite = validated_data.get("is_favorite", instance.is_favorite)
         instance.save()
 
         return instance
 
     class Meta:
         model = Project
-        fields = ['user', 'name']
+        fields = ['user', 'name', 'tasks_total', 'tasks_completed', 'is_favorite']

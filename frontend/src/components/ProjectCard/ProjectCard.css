@@ -1,0 +1,60 @@
+@import "../../styles/settings.pcss";
+
+.startpage-project-card {
+    min-width: 220px;
+    max-width: 340px;
+    width: 100%;
+    min-height: 220px;
+    max-height: 340px;
+    height: 100%;
+    box-sizing: border-box;
+    background: var(--gray_95);
+    border: 1px solid #ececec;
+    border-radius: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.startpage-project-card:hover {
+    border-color: var(--gray_70);
+}
+
+.startpage-project-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray_20);
+}
+.startpage-project-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+.startpage-project-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.startpage-project-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--gray_70);
+    overflow: hidden;
+    position: relative;
+    top: 110px;
+}
+
+.startpage-project-progress-bar-fill {
+    height: 100%;
+    background: var(--accent, #4a90e2);
+    transition: width 0.3s;
+}
+
+.startpage-project-progress-text {
+    font-size: 13px;
+    color: #888;
+    position: relative;
+    top: 110px;
+}
