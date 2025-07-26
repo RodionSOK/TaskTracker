@@ -126,13 +126,6 @@
   background: var(--gray_85);
   margin-bottom: 24px;
 }
-.startpage-projects {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .startpage-empty {
   display: flex;
   flex-direction: column;

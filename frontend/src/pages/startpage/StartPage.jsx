@@ -4,6 +4,7 @@ import { fetchProjects } from "../../store/projectslice";
 import { logout } from "../../store/authslice";
 import { useNavigate } from "react-router-dom";
 
+import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import Button from "../../components/Button/Button";
 import Icon from "../../components/Icon/Icon";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -44,8 +45,9 @@ const StartPage = () => {
     const { projects, isLoading, error } = useSelector(state => state.projects);
     const projectList = Array.isArray(projects.projects) ? projects.projects : [];
     const user = useSelector(state => state.auth.user);
+    const myProjects = projectList.filter(project => project.user === user.user_id);
 
-    const [activeFilter, setActiveFilter] = useState('Все');
+    const [activeFilter, setActiveFilter] = useState('all');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
     const handleFilterClick = (filter) => {
@@ -129,17 +131,13 @@ const StartPage = () => {
                         <div className="startpage-error">{typeof error === 'string' ? error : JSON.stringify(error)}</div>
                     ) : projects.length === 0 ? (
                         <div className="startpage-empty">
-                            <Icon type="category" width="48" height="48" />
                             <div>У вас пока нет проектов</div>
-                            <Button theme="gray" size="medium">Создать первый проект</Button>
                         </div>
                     ) : (
                         <div className="startpage-project-list">
-                        {projectList.map((project) => (
-                            <div className="startpage-project-card" key={project.id || project.name}>
-                                <div className="startpage-project-title">{project.name}</div>
-                            </div>
-                        ))}
+                            {myProjects.map((project) => (
+                                <ProjectCard key={project.id || project.name} project={project} />
+                            ))}
                         </div>
                     )}
                 </section>

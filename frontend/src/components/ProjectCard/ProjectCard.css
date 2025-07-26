@@ -8,13 +8,14 @@
     max-height: 340px;
     height: 100%;
     box-sizing: border-box;
-    background: var(--gray_95);
-    border: 1px solid #ececec;
+    background: #fff;
+    border: 1px solid var(--gray_85);
     border-radius: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    position: relative;
 }
 
 .startpage-project-card:hover {
@@ -23,8 +24,9 @@
 
 .startpage-project-title {
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--gray_20);
+    margin-bottom: 12px;
 }
 .startpage-project-card-actions {
     display: flex;
@@ -33,28 +35,84 @@
 }
 .startpage-project-progress {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    margin-top: auto;
 }
 
 .startpage-project-progress-bar {
     width: 100%;
     height: 8px;
-    background: var(--gray_70);
+    background: var(--gray_90);               
+    border-radius: 4px;
     overflow: hidden;
-    position: relative;
-    top: 110px;
+    margin-bottom: 4px;
 }
 
 .startpage-project-progress-bar-fill {
     height: 100%;
-    background: var(--accent, #4a90e2);
+    background: var(--accent, #4ae29e);      
     transition: width 0.3s;
+    border-radius: 4px;
 }
 
 .startpage-project-progress-text {
     font-size: 13px;
-    color: #888;
-    position: relative;
-    top: 110px;
+    color: var(--gray_60);                 
+    margin-top: 2px;
+}
+
+.project-card-header {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    z-index: 2;
+}
+.project-favorite-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent, #4a90e2);
+    margin: 0;
+}
+
+.project-menu-button {
+    background: none;
+    border: none;
+    padding: 4px;
+    border-radius: 50%;
+    color: var(--gray_50);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.project-menu-button:hover {
+    background: var(--gray_90);
+    color: var(--gray_20);
+}
+.project-favorite-star {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+.project-favorite-star input[type="checkbox"] {
+    display: none;
+}
+
+.star-icon {
+    transition: fill 0.2s, stroke 0.2s;
+    stroke: var(--accent, #FFD600);
+    fill: none;
+}
+
+.project-favorite-star input[type="checkbox"]:checked + .star-icon,
+.project-favorite-star .star-icon[fill]:not([fill="none"]) {
+    fill: var(--accent, #FFD600);
+    stroke: var(--accent, #FFD600);
 }
