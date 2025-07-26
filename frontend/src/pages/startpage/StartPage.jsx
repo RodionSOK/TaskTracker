@@ -5,6 +5,7 @@ import { logout } from "../../store/authslice";
 import { useNavigate } from "react-router-dom";
 
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
+import ProjectForm from "../../components/ProjectForm/ProjectForm";
 import Button from "../../components/Button/Button";
 import Icon from "../../components/Icon/Icon";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -49,6 +50,7 @@ const StartPage = () => {
 
     const [activeFilter, setActiveFilter] = useState('all');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+    const [showProjectForm, setShowProjectForm] = useState(false);
 
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
@@ -76,6 +78,16 @@ const StartPage = () => {
     };
 
     const handleOverlayClick = () => setSidebarCollapsed(true);
+
+    const handleCreateProjectClick = () => {
+        setShowProjectForm(true);
+    };
+    const handleCloseProjectForm = () => {
+        setShowProjectForm(false);
+    };
+    const handleCreateProject = () => {
+        console.log("Создать проект")
+    };
 
     useEffect(() => {
         dispatch(fetchProjects());
@@ -134,11 +146,35 @@ const StartPage = () => {
                             <div>У вас пока нет проектов</div>
                         </div>
                     ) : (
-                        <div className="startpage-project-list">
-                            {myProjects.map((project) => (
-                                <ProjectCard key={project.id || project.name} project={project} />
-                            ))}
-                        </div>
+                        <>
+                            <div className="startpage-project-list">
+                                {myProjects.map((project) => (
+                                    <ProjectCard key={project.id || project.name} project={project} />
+                                ))}
+                                <div
+                                    className="startpage-project-card startpage-project-card--new"
+                                    onClick={handleCreateProjectClick}
+                                    tabIndex={0}
+                                    role="button"
+                                    aria-label="Создать новый проект"
+                                >
+                                    <div className="new-project-icon">
+                                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                            <circle cx="20" cy="20" r="20" fill="var(--gray_90)" />
+                                            <rect x="18" y="10" width="4" height="20" rx="2" fill="var(--gray_50)" />
+                                            <rect x="10" y="18" width="20" height="4" rx="2" fill="var(--gray_50)" />
+                                        </svg>
+                                    </div>
+                                    <div className="new-project-text">Создать проект</div>
+                                </div>
+                            </div>
+                            {showProjectForm && (
+                                <ProjectForm
+                                onCreate={handleCreateProject} 
+                                onClose={handleCloseProjectForm}
+                                />
+                            )}
+                        </>
                     )}
                 </section>
             </main>

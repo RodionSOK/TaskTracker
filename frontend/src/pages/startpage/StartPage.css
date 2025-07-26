@@ -126,11 +126,11 @@
   background: var(--gray_85);
   margin-bottom: 24px;
 }
-.startpage-empty {
+
+.startpage-project-list {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  color: #888;
-  font-size: 18px;
+  flex-direction: row;
+  gap: 24px; 
+  flex-wrap: wrap;
+  align-items: stretch;
 }

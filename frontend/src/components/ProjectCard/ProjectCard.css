@@ -116,3 +116,38 @@
     fill: var(--accent, #FFD600);
     stroke: var(--accent, #FFD600);
 }
+
+.startpage-project-card--new {
+    min-width: 220px;
+    max-width: 340px;
+    width: 100%;
+    min-height: 220px;
+    max-height: 340px;
+    height: 100%;
+    box-sizing: border-box;
+    background: var(--gray_95);
+    border: 2px dashed var(--gray_85);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.startpage-project-card--new:hover {
+    border-color: var(--gray_70);
+    background: var(--gray_90);
+}
+
+.new-project-icon {
+    margin-bottom: 8px;
+}
+
+.new-project-text {
+    color: var(--gray_50);
+    font-size: 16px;
+    font-weight: 500;
+}
