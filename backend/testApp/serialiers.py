@@ -98,16 +98,26 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['project', 'name', 'color']
 
 class ProjectSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     tasks_total = serializers.IntegerField(read_only=True)
     tasks_completed = serializers.IntegerField(read_only=True)
+    invites = serializers.ListField(
+        child=serializers.EmailField(),
+        write_only=True,
+        required=False
+    )
     
     def create(self, validated_data):
-        return Project.objects.create(
+        invites = validated_data.pop('invites', [])
+        project = Project.objects.create(
             user=validated_data['user'],
             name=validated_data["name"],
-            is_favorite=validated_data["is_favorite"],
+            is_favorite=validated_data.get("is_favorite", False),
         )
-    
+        for email in invites:
+            print(email)
+        return project
+
     def update(self, instance, validated_data):
         instance.name = validated_data.get("name", instance.name)
         instance.is_favorite = validated_data.get("is_favorite", instance.is_favorite)
@@ -117,4 +127,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['user', 'name', 'tasks_total', 'tasks_completed', 'is_favorite']
+        fields = ['user', 'name', 'tasks_total', 'tasks_completed', 'is_favorite', 'invites']

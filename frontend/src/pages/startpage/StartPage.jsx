@@ -85,8 +85,35 @@ const StartPage = () => {
     const handleCloseProjectForm = () => {
         setShowProjectForm(false);
     };
-    const handleCreateProject = () => {
-        console.log("Создать проект")
+    const handleCreateProject = async ({ name, invites }) => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            const userId = user.user_id;
+
+            const response = await fetch("http://192.168.1.66:8000/api/v1/projects/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    name,
+                    user: userId,
+                    is_favorite: false,
+                    invites,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Ошибка создания проекта");
+            }
+
+            dispatch(fetchProjects());
+            setShowProjectForm(false);
+        } catch (error) {
+            alert(error.message);
+        }
     };
 
     useEffect(() => {
@@ -170,8 +197,8 @@ const StartPage = () => {
                             </div>
                             {showProjectForm && (
                                 <ProjectForm
-                                onCreate={handleCreateProject} 
-                                onClose={handleCloseProjectForm}
+                                    onCreate={handleCreateProject} 
+                                    onClose={handleCloseProjectForm}
                                 />
                             )}
                         </>
