@@ -9,6 +9,8 @@ import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import ProjectForm from "../../components/ProjectForm/ProjectForm";
 import Button from "../../components/Button/Button";
 import Icon from "../../components/Icon/Icon";
+import LoadSpinner from "../../shared/preload/LoadSpinner/LoadSpinner";
+
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./StartPage.css";
 
@@ -188,6 +190,18 @@ const StartPage = () => {
             });
         }
     };
+
+    const handleDeleteProject = async (projectId) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        dispatch(fetchProjects());
+        setShowSettings(false);
+    };
     
     const handleCloseSettings = () => setShowSettings(false);
 
@@ -240,7 +254,15 @@ const StartPage = () => {
                 <div className="startpage-divider"></div>
                 <section className="startpage-projects">
                     {isLoading ? (
-                        <div className="startpage-loading">Загрузка проектов...</div>
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minHeight: "60vh",
+                            width: "100%",
+                        }}>
+                            <LoadSpinner />
+                        </div>
                     ) : error ? (
                         <div className="startpage-error">{typeof error === 'string' ? error : JSON.stringify(error)}</div>
                     ) : projects.length === 0 ? (
@@ -287,6 +309,7 @@ const StartPage = () => {
                                     tasks={selectedProjectTasks}
                                     onSave={handleSaveSettings}
                                     onDeleteTask={handleDeleteTask}
+                                    onDeleteProject={handleDeleteProject}
                                     onClose={handleCloseSettings}
                                 />
                             )}

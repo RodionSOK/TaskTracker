@@ -8,7 +8,8 @@ const ProjectSettings = ({
     project, 
     tasks, 
     onSave, 
-    onDeleteTask, 
+    onDeleteTask,
+    onDeleteProject,
     onClose,
 }) => {
     const [name, setName] = useState(project.name);
@@ -127,6 +128,7 @@ const ProjectSettings = ({
                 </div>
                 <div className="project-settings-actions">
                     <Button theme="black" onClick={handleSave}>Сохранить</Button>
+                    <Button theme="red" onClick={() => onDeleteProject(project.id)}>Удалить</Button>
                     <Button theme="gray" onClick={onClose}>Закрыть</Button>
                 </div>
             </div>

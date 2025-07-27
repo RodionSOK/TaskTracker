@@ -23,6 +23,7 @@ const Button = ({
         button_small: size === "small",
         button_gray: theme === "gray",
         button_black: theme === "black",
+        button_red: theme === "red",
         button_wide: wide,
         button_inactive: inactive,
     });
@@ -66,7 +67,7 @@ Button.propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
     size: PropTypes.oneOf(["medium", "small"]),
-    theme: PropTypes.oneOf(["gray", "black"]),
+    theme: PropTypes.oneOf(["gray", "black", "red"]),
     disabled: PropTypes.bool,
     inactive: PropTypes.bool,
     type: PropTypes.oneOf(["button", "submit", "reset"]), // Обновленные типы
