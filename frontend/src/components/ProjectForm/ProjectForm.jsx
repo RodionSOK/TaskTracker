@@ -94,17 +94,17 @@ const ProjectForm = ({ onCreate, onClose }) => {
                         theme="white-with-border"
                     />
                 </div>
+                {invites.length > 0 && (
+                    <div className="invite-list">
+                        {invites.map(email => (
+                        <span key={email} className="invite-item">
+                            {email}
+                            <button type="button" onClick={() => handleRemoveInvite(email)}>&times;</button>
+                        </span>
+                        ))}
+                    </div>
+                )}
             </label>
-            {invites.length > 0 && (
-                <div className="invite-list">
-                    {invites.map(email => (
-                    <span key={email} className="invite-item">
-                        {email}
-                        <button type="button" onClick={() => handleRemoveInvite(email)}>&times;</button>
-                    </span>
-                    ))}
-                </div>
-            )}
             {error && <div className="form-error">{error}</div>}
             <div className="form-actions">
                 <Button type="submit" theme="black" size="medium">Создать</Button>

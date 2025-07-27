@@ -4,6 +4,7 @@ import { fetchProjects } from "../../store/projectslice";
 import { logout } from "../../store/authslice";
 import { useNavigate } from "react-router-dom";
 
+import ProjectSettings from "../../components/ProjectSettings/ProjectSettings";"../../components/ProjectSettings/ProjectSettings";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import ProjectForm from "../../components/ProjectForm/ProjectForm";
 import Button from "../../components/Button/Button";
@@ -50,16 +51,17 @@ const StartPage = () => {
     const [activeFilter, setActiveFilter] = useState('all');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [showProjectForm, setShowProjectForm] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [selectedProject, setSelectedProject] = useState(null);
 
     const myProjects = projectList.filter(project => project.user === user.user_id);
     const filteredProjects = activeFilter === 'favorites'
-
-    ? myProjects.filter(project => project.is_favorite)
-    : myProjects;
+        ? myProjects.filter(project => project.is_favorite)
+        : myProjects;
 
     const sortedProjects = [...filteredProjects].sort((a, b) => a.id - b.id);
 
-   
+    const selectedProjectTasks = selectedProject ? (Array.isArray(selectedProject.tasks) ? selectedProject.tasks : []) : [];
 
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
@@ -136,7 +138,58 @@ const StartPage = () => {
             body: JSON.stringify({ is_favorite: isFavorite }),
         });
         dispatch(fetchProjects());
+    };
+
+    const handleOpenSettings = (project) => {
+        setSelectedProject(project);
+        setShowSettings(true);
     }
+
+    const handleSaveSettings = async (projectId, data) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
+        dispatch(fetchProjects());
+    };
+
+    // const handleAddParticipant = async (projectId, email) => {
+    //     const token = localStorage.getItem("accessToken");
+    //     await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": `Bearer ${token}`,
+    //         },
+    //         body: JSON.stringify({ email }),
+    //     });
+    //     dispatch(fetchProjects());
+    // };
+
+    const handleDeleteTask = async (projectId, taskId) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.66:8000/api/v1/tasks/${taskId}/`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        dispatch(fetchProjects());
+        if (selectedProject && selectedProject.id === projectId) {
+            setSelectedProject({
+                ...selectedProject,
+                tasks: selectedProject.tasks.filter(task => task.id !== taskId)
+            });
+        }
+    };
+    
+    const handleCloseSettings = () => setShowSettings(false);
 
     useEffect(() => {
         dispatch(fetchProjects());
@@ -202,6 +255,7 @@ const StartPage = () => {
                                         key={project.id || project.name} 
                                         project={project} 
                                         onFavoriteToggle={handleFavoriteToggle}    
+                                        onSettingsClick={() => handleOpenSettings(project)}
                                     />
                                 ))}
                                 <div
@@ -225,6 +279,15 @@ const StartPage = () => {
                                 <ProjectForm
                                     onCreate={handleCreateProject} 
                                     onClose={handleCloseProjectForm}
+                                />
+                            )}
+                            {showSettings && selectedProject && (
+                                <ProjectSettings
+                                    project={selectedProject}
+                                    tasks={selectedProjectTasks}
+                                    onSave={handleSaveSettings}
+                                    onDeleteTask={handleDeleteTask}
+                                    onClose={handleCloseSettings}
                                 />
                             )}
                         </>

@@ -41,7 +41,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['title', 'category', 'description', 'date_create', 'date_deadline', 'is_done', 'by_who', 'is_started']
+        fields = ['id', 'title', 'category', 'description', 'date_create', 'date_deadline', 'is_done', 'by_who', 'is_started']
 
 class UserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(
@@ -101,6 +101,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     tasks_total = serializers.IntegerField(read_only=True)
     tasks_completed = serializers.IntegerField(read_only=True)
+    tasks = TaskSerializer(many=True, read_only=True, source='task_set')
     invites = serializers.ListField(
         child=serializers.EmailField(),
         write_only=True,
@@ -127,4 +128,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'user', 'name', 'tasks_total', 'tasks_completed', 'is_favorite', 'invites']
+        fields = ['id', 'user', 'name', 'tasks', 'tasks_total', 'tasks_completed', 'is_favorite', 'invites']

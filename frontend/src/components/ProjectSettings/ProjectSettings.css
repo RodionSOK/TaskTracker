@@ -1,0 +1,206 @@
+.project-settings-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+    padding: 32px 28px;
+    max-width: 440px;
+    margin: 48px auto;
+    position: relative;
+    z-index: 1000;
+    font-family: inherit;
+}
+
+.project-settings-modal h2 {
+    margin-top: 0;
+    margin-bottom: 28px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.project-settings-modal label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 15px;
+    color: var(--gray_40, #444);
+    margin-bottom: 0;
+}
+
+.project-settings-modal input[type="text"],
+.project-settings-modal input[type="email"],
+.project-settings-modal .input__input {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 100%;
+    height: 44px;
+    font-size: 16px;
+    padding: 0 12px 0 44px;
+    box-sizing: border-box;
+    border: 1px solid var(--gray_85, #e0e0e0);
+    background: #fafbfc;
+    color: #222;
+}
+
+.project-settings-modal input:focus,
+.project-settings-modal .input__input:focus {
+    border-color: var(--gray_70, #bdbdbd);
+    background: #fff;
+    outline: none;
+}
+
+.project-name-input-wrapper,
+.invite-email-input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex: 1 1 100%;
+}
+
+.project-name-input-wrapper .project-name-icon,
+.invite-email-input-wrapper .invite-add-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.participants-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.participant-chip {
+    background: var(--gray_95, #f5f5f5);
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--gray_30, #333);
+}
+
+.project-settings-input {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 100%;
+    box-sizing: border-box;
+}
+
+.participant-chip button {
+    background: none;
+    border: none;
+    color: #d32f2f;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
+.project-settings-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 18px;
+    flex-direction: column;
+}
+
+.project-settings-modal ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.project-settings-modal li {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.project-settings-modal h3 {
+    margin-top: 28px;
+    margin-bottom: 14px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.project-settings-modal button {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.project-settings-modal .form-error {
+    color: #d32f2f;
+    margin-bottom: 12px;
+    font-size: 0.98rem;
+}
+
+@media (max-width: 600px) {
+    .project-settings-modal {
+        max-width: 98vw;
+        padding: 16px 8px;
+    }
+}
+
+/* Затемнение фона */
+.project-settings-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.18);
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Модальное окно */
+.project-settings-modal {
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+    padding: 32px 28px;
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    font-family: inherit;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .project-settings-modal {
+        max-width: 98vw;
+        padding: 16px 8px;
+    }
+}
+.task-delete-icon {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.task-delete-icon:hover svg line {
+    stroke: #b71c1c;
+}

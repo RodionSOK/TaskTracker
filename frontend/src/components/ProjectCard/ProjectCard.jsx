@@ -4,7 +4,7 @@ import './ProjectCard.css';
 import Button from "../../components/Button/Button";
 
 
-const ProjectCard = ({ project, onFavoriteToggle }) => {
+const ProjectCard = ({ project, onFavoriteToggle, onSettingsClick }) => {
     const completed = project.tasks_completed || 0;
     const total = project.tasks_total || 0;
     const percent = Math.round((completed / total) * 100) || 0;
@@ -57,7 +57,7 @@ const ProjectCard = ({ project, onFavoriteToggle }) => {
                 </label>
                 <button
                     className="project-menu-button"
-                    onClick={toggleMenu}
+                    onClick={onSettingsClick}
                     aria-label="Открыть меню проекта"
                 >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
