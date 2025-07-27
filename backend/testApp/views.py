@@ -207,3 +207,16 @@ class ProjectViewSet(APIView):
         instance.delete()
 
         return Response({"project": "delete post" + str(pk)})
+    
+    def patch(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method PATCH not allowed"})
+        try:
+            instance = Project.objects.get(pk=pk)
+        except Project.DoesNotExist:
+            return Response({"error": "Object does not exist"})
+        serializer = ProjectSerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"project": serializer.data})

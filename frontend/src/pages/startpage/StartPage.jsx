@@ -46,11 +46,20 @@ const StartPage = () => {
     const { projects, isLoading, error } = useSelector(state => state.projects);
     const projectList = Array.isArray(projects.projects) ? projects.projects : [];
     const user = useSelector(state => state.auth.user);
-    const myProjects = projectList.filter(project => project.user === user.user_id);
 
     const [activeFilter, setActiveFilter] = useState('all');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [showProjectForm, setShowProjectForm] = useState(false);
+
+    const myProjects = projectList.filter(project => project.user === user.user_id);
+    const filteredProjects = activeFilter === 'favorites'
+
+    ? myProjects.filter(project => project.is_favorite)
+    : myProjects;
+
+    const sortedProjects = [...filteredProjects].sort((a, b) => a.id - b.id);
+
+   
 
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
@@ -116,6 +125,19 @@ const StartPage = () => {
         }
     };
 
+    const handleFavoriteToggle = async (projectId, isFavorite) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ is_favorite: isFavorite }),
+        });
+        dispatch(fetchProjects());
+    }
+
     useEffect(() => {
         dispatch(fetchProjects());
     }, [dispatch]);
@@ -175,8 +197,12 @@ const StartPage = () => {
                     ) : (
                         <>
                             <div className="startpage-project-list">
-                                {myProjects.map((project) => (
-                                    <ProjectCard key={project.id || project.name} project={project} />
+                                {sortedProjects.map((project) => (
+                                    <ProjectCard 
+                                        key={project.id || project.name} 
+                                        project={project} 
+                                        onFavoriteToggle={handleFavoriteToggle}    
+                                    />
                                 ))}
                                 <div
                                     className="startpage-project-card startpage-project-card--new"

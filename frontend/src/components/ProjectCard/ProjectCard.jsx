@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './ProjectCard.css';
 
 import Button from "../../components/Button/Button";
 
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, onFavoriteToggle }) => {
     const completed = project.tasks_completed || 0;
     const total = project.tasks_total || 0;
     const percent = Math.round((completed / total) * 100) || 0;
+    const [isFavorite, setIsFavorite] = useState(project.is_favorite || false);
 
     const toggleMenu = (e) => {
         e.stopPropagation();
         setShowMenu(!showMenu);
     };
 
-    const handleFavoriteToggle = (e) => {
+   useEffect(() => {
+        setIsFavorite(project.is_favorite || false);
+    }, [project.is_favorite]);
+
+    const handleFavoriteToggle = async (e) => {
+        if (e) e.preventDefault(); 
         e.stopPropagation();
-        console.log('Toggle favorite for project:', project.id);
+        const newValue = !isFavorite;
+        setIsFavorite(newValue);
+        if (onFavoriteToggle) {
+            await onFavoriteToggle(project.id, newValue);
+        }
     };
 
     return (
@@ -25,20 +35,22 @@ const ProjectCard = ({ project }) => {
                 <label className="project-favorite-star">
                     <input
                         type="checkbox"
-                        checked={project.isFavorite || false}
+                        checked={isFavorite}
                         onChange={handleFavoriteToggle}
                         aria-label="Добавить в избранное"
+                        style={{ display: 'none' }} 
                     />
                     <svg
                         className="star-icon"
                         width="22"
                         height="22"
                         viewBox="0 0 24 24"
-                        fill={project.isFavorite ? "var(--accent, #FFD600)" : "none"}
+                        fill={isFavorite ? "var(--accent, #FFD600)" : "none"}
                         stroke="var(--accent, #FFD600)"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        onClick={handleFavoriteToggle}
                     >
                         <polygon points="12 2 15 9 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 9" />
                     </svg>
