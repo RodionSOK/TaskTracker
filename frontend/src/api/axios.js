@@ -15,27 +15,43 @@ api.interceptors.request.use(config => {
     return config;
 })
 
-api.interceptors.response.use(response => response, async error => {
-    const originalRequest = error.config;
+api.interceptors.response.use(
+    response => response,
+    async error => {
+        const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
+        if (
+            error.response &&
+            error.response.status === 401 &&
+            !originalRequest._retry
+        ) {
+            originalRequest._retry = true;
 
-        try {
             const refreshToken = localStorage.getItem('refreshToken');
-            const response = await axios.post('http://localhost:8000/api/v1/token/refresh/', { refresh: refreshToken });
+            if (refreshToken) {
+                try {
+                    const response = await axios.post(
+                        'http://192.168.1.66:8000/api/v1/token/refresh/',
+                        { refresh: refreshToken }
+                    );
 
-            localStorage.setItem('accessToken', response.data.access);
-            originalRequest.headers.Authorization = 'Bearer' + response.data.access;
-            return api(originalRequest);
-        } catch (refreshError) {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            window.location = '/login';
-        };
-    };
-    return Promise.reject(error);
-});
+                    localStorage.setItem('accessToken', response.data.access);
+                    originalRequest.headers.Authorization = 'Bearer ' + response.data.access;
+                    return api(originalRequest);
+                } catch (refreshError) {
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
+                    window.location = '/login';
+                }
+            } else {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                window.location = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
 export const decodeJWT = (token) => {
     if (!token) return null;

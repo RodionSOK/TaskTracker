@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ProjectCard.css';
 
-import Button from "../../components/Button/Button";
-
-
 const ProjectCard = ({ project, onFavoriteToggle, onSettingsClick }) => {
+    const navigate = useNavigate();
+
     const completed = project.tasks_completed || 0;
     const total = project.tasks_total || 0;
     const percent = Math.round((completed / total) * 100) || 0;
     const [isFavorite, setIsFavorite] = useState(project.is_favorite || false);
-
-    const toggleMenu = (e) => {
-        e.stopPropagation();
-        setShowMenu(!showMenu);
-    };
 
    useEffect(() => {
         setIsFavorite(project.is_favorite || false);
@@ -29,8 +24,12 @@ const ProjectCard = ({ project, onFavoriteToggle, onSettingsClick }) => {
         }
     };
 
+    const handleCardClick = () => {
+        navigate(`/tasks/`);
+    };
+
     return (
-        <div className="startpage-project-card">
+        <div className="startpage-project-card" onClick={handleCardClick}>
             <div className="project-card-header">
                 <label className="project-favorite-star">
                     <input
@@ -57,7 +56,10 @@ const ProjectCard = ({ project, onFavoriteToggle, onSettingsClick }) => {
                 </label>
                 <button
                     className="project-menu-button"
-                    onClick={onSettingsClick}
+                    onClick={e => {
+                        e.stopPropagation(); // <-- добавьте это!
+                        if (onSettingsClick) onSettingsClick();
+                    }}
                     aria-label="Открыть меню проекта"
                 >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

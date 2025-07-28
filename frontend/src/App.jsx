@@ -14,10 +14,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
-
         <Route element={<ProtectedRoute />}>
-
-
           <Route path="/tasks" element={<HomePage />} />
           <Route path='/start' element={<StartPage />} />
         </Route>

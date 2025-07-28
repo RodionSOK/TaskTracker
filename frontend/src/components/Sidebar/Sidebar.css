@@ -1,3 +1,5 @@
+/* Универсальный класс для сайдбара */
+.sidebar,
 .startpage-sidebar {
     position: fixed;
     top: 0;
@@ -14,6 +16,8 @@
     padding-top: 24px;
 }
 
+/* Профиль */
+.sidebar-profile,
 .startpage-profile {
     display: flex;
     flex-direction: column;
@@ -21,6 +25,8 @@
     margin-bottom: 32px;
 }
 
+/* Аватар */
+.sidebar-avatar,
 .startpage-avatar {
     width: 40px;
     height: 40px;
@@ -35,7 +41,10 @@
     margin-bottom: 8px;
 }
 
+/* Имя и email */
+.sidebar-username,
 .startpage-username,
+.sidebar-useremail,
 .startpage-useremail {
     font-size: 14px;
     color: #555;
@@ -43,6 +52,8 @@
     transition: opacity 0.2s, width 0.2s;
 }
 
+/* Меню */
+.sidebar-menu,
 .startpage-menu {
     width: 100%;
     display: flex;
@@ -50,6 +61,7 @@
     align-items: center;
 }
 
+.sidebar-menu-item,
 .startpage-menu-item {
     display: flex;
     align-items: center;
@@ -61,22 +73,27 @@
     color: #333;
 }
 
+.sidebar-menu-item:hover,
 .startpage-menu-item:hover {
     background: #f5f5f5;
 }
 
+.sidebar-menu-item svg,
 .startpage-menu-item svg {
     min-width: 22px;
     min-height: 22px;
     color: #555;
 }
 
+.sidebar-menu-item span,
 .startpage-menu-item span {
     font-size: 15px;
     transition: opacity 0.2s, width 0.2s;
     white-space: nowrap;
 }
 
+/* Свернутый сайдбар */
+.sidebar.collapsed,
 .startpage-sidebar.collapsed {
     width: 60px;
     box-shadow: 1px 0 4px rgba(0,0,0,0.04);
@@ -84,10 +101,12 @@
     align-items: center;
 }
 
+.sidebar.collapsed .sidebar-profile,
 .startpage-sidebar.collapsed .startpage-profile {
     margin-bottom: 16px;
 }
 
+.sidebar.collapsed .sidebar-avatar,
 .startpage-sidebar.collapsed .startpage-avatar {
     width: 32px;
     height: 32px;
@@ -95,21 +114,25 @@
     margin-bottom: 0;
 }
 
+.sidebar.collapsed .sidebar-menu,
 .startpage-sidebar.collapsed .startpage-menu {
     align-items: center;
 }
 
+.sidebar.collapsed .sidebar-menu-item,
 .startpage-sidebar.collapsed .startpage-menu-item {
     justify-content: center;
     padding: 10px 0;
     width: 100%;
 }
 
+.sidebar.collapsed .sidebar-menu-item svg,
 .startpage-sidebar.collapsed .startpage-menu-item svg {
     min-width: 22px;
     min-height: 22px;
 }
 
+.sidebar.collapsed .sidebar-menu-item span,
 .startpage-sidebar.collapsed .startpage-menu-item span {
     display: none;
 }
