@@ -4,9 +4,9 @@ import { fetchProjects } from "../../store/projectslice";
 import { logout } from "../../store/authslice";
 import { useNavigate } from "react-router-dom";
 
-import ProjectSettings from "../../components/ProjectSettings/ProjectSettings";"../../components/ProjectSettings/ProjectSettings";
-import ProjectCard from "../../components/ProjectCard/ProjectCard";
-import ProjectForm from "../../components/ProjectForm/ProjectForm";
+import ProjectSettings from "../../components/ProjectComponents/ProjectSettings/ProjectSettings";
+import ProjectCard from "../../components/ProjectComponents/ProjectCard/ProjectCard";
+import ProjectForm from "../../components/ProjectComponents/ProjectForm/ProjectForm";
 import Button from "../../components/Button/Button";
 import Icon from "../../components/Icon/Icon";
 import LoadSpinner from "../../shared/preload/LoadSpinner/LoadSpinner";
@@ -50,6 +50,8 @@ const StartPage = () => {
     const projectList = Array.isArray(projects.projects) ? projects.projects : [];
     const user = useSelector(state => state.auth.user);
 
+
+    
     const [activeFilter, setActiveFilter] = useState('all');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [showProjectForm, setShowProjectForm] = useState(false);

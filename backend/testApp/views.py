@@ -162,6 +162,19 @@ class CategoryViewSet(APIView):
         instance.delete()
 
         return Response({"category": "delete category" + str(pk)})
+    
+    def patch(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method PATCH not allowed"})
+        try:
+            instance = Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
+            return Response({"error": "Object does not exist"})
+        serializer = CategorySerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"category": serializer.data})
 
 class ProjectViewSet(APIView):
     serializer_class = ProjectSerializer

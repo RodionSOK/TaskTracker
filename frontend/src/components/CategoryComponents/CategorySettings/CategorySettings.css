@@ -1,0 +1,173 @@
+.category-settings-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
+
+.category-settings-modal {
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+    padding: 32px 28px;
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.category-settings-modal h2 {
+    margin-top: 0;
+    margin-bottom: 28px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.category-settings-list {
+    display: grid;
+    grid-template-columns: 1fr 48px 40px;
+    gap: 0;
+    margin-bottom: 24px;
+    justify-items: start;
+}
+
+.category-settings-item {
+    display: contents;
+}
+
+.category-settings-row {
+    display: contents;
+}
+
+.category-settings-name,
+.category-settings-item input[type="text"] {
+    grid-column: 1;
+    align-self: center;
+    justify-self: start;
+    width: 100%;
+    min-width: 0;
+    font-size: 18px;
+    /* font-weight: 500; */
+    color: #222;
+    padding: 8px 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: background 0.15s;
+}
+
+.category-settings-name:hover {
+    background: #f5f5f5;
+}
+
+.category-color-preview {
+    grid-column: 2;
+    align-self: center;
+    justify-self: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+    margin-left: 0;
+}
+
+.category-color-inline-modal {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none; /* убирает рамку */
+    box-sizing: border-box;
+    display: block;
+    margin: 0 auto; /* центрирует в ячейке grid */
+    align-self: center;
+    justify-self: center;
+}
+
+.category-color-inline-modal:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #bdbdbd; /* мягкий фокус, если нужен */
+}
+
+.category-color-inline-modal::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 50%;
+}
+.category-color-inline-modal::-webkit-color-swatch {
+    border-radius: 50%;
+}
+.category-color-inline-modal::-moz-color-swatch {
+    border-radius: 50%;
+}
+
+.category-settings-delete,
+.category-settings-cancel {
+    grid-column: 3;
+    align-self: center;
+    justify-self: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.category-settings-delete:hover svg line {
+    stroke: #b71c1c;
+}
+
+.category-settings-cancel:hover svg line {
+    stroke: #888;
+}
+
+/* Разделительная полоса между категориями */
+/* .category-settings-item:not(:last-child) .category-settings-row {
+    border-bottom: 1px solid #ececec;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+} */
+
+.category-settings-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 0px;
+}
+.category-settings-actions button {
+    width: 100%;
+    font-size: 18px;
+}
+
+@media (max-width: 600px) {
+    .category-settings-modal {
+        max-width: 98vw;
+        padding: 16px 8px;
+    }
+    .category-settings-actions {
+        gap: 8px;
+    }
+}
+.category-settings-divider {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 1px;
+    background: #ececec;
+    margin: 0px 0;
+}

@@ -25,7 +25,7 @@ const ProjectCard = ({ project, onFavoriteToggle, onSettingsClick }) => {
     };
 
     const handleCardClick = () => {
-        navigate(`/tasks/`);
+        navigate(`/${encodeURIComponent(project.name)}/tasks/`);
     };
 
     return (

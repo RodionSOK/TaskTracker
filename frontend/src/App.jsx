@@ -15,7 +15,7 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/tasks" element={<HomePage />} />
+          <Route path="/:projectName/tasks" element={<HomePage />} />
           <Route path='/start' element={<StartPage />} />
         </Route>
       </Routes>

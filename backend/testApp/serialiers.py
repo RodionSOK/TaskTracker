@@ -76,6 +76,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    text_color = serializers.SerializerMethodField()
+    project = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=Project.objects.all()
+    )
+
+    def get_text_color(self, obj):
+        return obj.text_color
+
     def create(self, validated_data):
         category = Category.objects.create(
             project=validated_data['project'],
@@ -95,7 +104,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['project', 'name', 'color']
+        fields = ['id', 'project', 'name', 'color', 'text_color']
 
 class ProjectSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())

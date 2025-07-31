@@ -35,7 +35,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     
 class  Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     is_favorite = models.BooleanField(default=False) 
 
     def __str__(self):
@@ -52,7 +52,14 @@ class  Project(models.Model):
 class Category(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    color = models.CharField(max_length=7, default='#ff0000')
+    color = models.CharField(max_length=7, default='#cccccc')
+
+    @property
+    def text_color(self, factor=0.4):
+        hex_color = self.color.lstrip('#')
+        rgb = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        dark_rgb = tuple(int(c * factor) for c in rgb)
+        return '#{:02x}{:02x}{:02x}'.format(*dark_rgb)
 
     def __str__(self):
         return self.name

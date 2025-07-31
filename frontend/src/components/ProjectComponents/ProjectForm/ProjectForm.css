@@ -1,4 +1,4 @@
-@import "../../styles/settings.pcss";
+@import "../../../styles/settings.pcss";
 
 .create-project-modal {
   position: fixed;

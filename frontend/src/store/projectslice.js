@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, isRejected } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isRejected, current } from "@reduxjs/toolkit";
 import api from "../api/axios";
 
 export const fetchProjects = createAsyncThunk(

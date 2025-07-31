@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import Input from '../Input/Input';
-import Button from '../Button/Button';
+import Input from '../../Input/Input';
+import Button from '../../Button/Button';
 import './ProjectSettings.css';
 
 const ProjectSettings = ({
@@ -129,7 +129,7 @@ const ProjectSettings = ({
                 <div className="project-settings-actions">
                     <Button theme="black" onClick={handleSave}>Сохранить</Button>
                     <Button theme="red" onClick={() => onDeleteProject(project.id)}>Удалить</Button>
-                    <Button theme="gray" onClick={onClose}>Закрыть</Button>
+                    <Button theme="gray" onClick={onClose}>Отмена</Button>
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import Icon from "../Icon/Icon.jsx";
 
 import "./Input.pcss";
 
-const Input = ({
+const Input = React.forwardRef(({
     id,
     className,
     placeholder,
@@ -32,7 +32,7 @@ const Input = ({
     min,
     currency,
     header,
-}) => (
+}, ref) => (
     <div className={classNames("input", className)}>
         <div
             className={classNames("input__wrapp", {
@@ -42,6 +42,7 @@ const Input = ({
             })}
         >
             <input
+                ref={ref} // <-- ВАЖНО!
                 className={classNames("input__input", {
                     input__input_header: header === "true",
                     input__input_gray: theme === "gray",
@@ -76,14 +77,13 @@ const Input = ({
             )}
             {hint && status !== "success" && <div className="input__hint" dangerouslySetInnerHTML={{ __html: hint }} />}
             {currency && <div className="input__currency">{currency}</div>}
-
             {status === "success" && (
                 <Icon className="input__icon input__icon_success" type="mail-check" width="14" height="14" />
             )}
         </div>
         {error && <div className="input__error error" dangerouslySetInnerHTML={{ __html: error }} />}
     </div>
-);
+));
 
 Input.defaultProps = {
     value: "",

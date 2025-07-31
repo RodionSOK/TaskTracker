@@ -1,4 +1,4 @@
-@import "../../styles/settings.pcss";
+@import "../../../styles/settings.pcss";
 
 .startpage-project-card {
     min-width: 220px;

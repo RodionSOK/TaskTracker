@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import Input from '../Input/Input';
-import Button from '../Button/Button';
+import Input from '../../Input/Input';
+import Button from '../../Button/Button';
 import './ProjectForm.css'
 
 const ProjectForm = ({ onCreate, onClose }) => {

@@ -32,6 +32,7 @@ urlpatterns = [
     
     path('api/v1/categories/', CategoryViewSet.as_view()),
     path('api/v1/categories/<int:pk>/', CategoryViewSet.as_view()),
+    
     path('api/v1/tasks/', TaskViewSet.as_view()),
     path('api/v1/tasks/<int:pk>/', TaskViewSet.as_view()), 
 

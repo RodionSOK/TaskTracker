@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
+import { fetchCategories } from "../../store/categoryslice";
+import { logout } from "../../store/authslice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+import CategoryForm from "../../components/CategoryComponents/CategoryForm/CategoryForm";
+import CategorySettings from "../../components/CategoryComponents/CategorySettings/CategorySettings";
 
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
 import "./HomePage.css";
 
 const sidebarMenu = [
@@ -74,16 +78,27 @@ const columns = [
     "Неделя",
     "Две",
     "Больше двух",
-    "Завершенные"
+    // "Завершенные"
 ];
 
 const HomePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
+
     const user = useSelector((state) => state.auth.user);
+    const projectName = useParams().projectName;
+    const categories = useSelector((state) => state.categories);
+    const filteredCategories = Array.isArray(categories.categories) ? categories.categories.filter(cat => cat.project === projectName) : [];
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [activeTab, setActiveTab] = useState("Задачи");
+    const [activeCategory, setActiveCategory] = useState("Все");
+    const [showCategoryForm, setShowCategoryForm] = useState(false);
+    const [showCategorySettings, setShowCategorySettings] = useState(false);
 
     const handleMenuClick = (label) => {
         switch (label) {
@@ -111,6 +126,31 @@ const HomePage = () => {
         }
         setSidebarCollapsed(false);
     };
+
+    const handleSaveCategory = async (id, data) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.66:8000/api/v1/categories/${id}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+        }, 
+            body: JSON.stringify(data),
+        });
+        dispatch(fetchCategories());
+    };
+
+    const handleDeleteCategory = async (id) => { 
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.66:8000/api/v1/categories/${id}/`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        dispatch(fetchCategories());
+    }
 
     return (
         <div className="homepage-root">
@@ -140,14 +180,72 @@ const HomePage = () => {
                     >
                         В работе
                     </span>
-                    <span
+                    {/* <span
                         className={`homepage-tab${activeTab === "Фильтры" ? " active" : ""}`}
                         onClick={() => setActiveTab("Фильтры")}
                     >
                         Фильтры
-                    </span>
+                    </span> */}
                 </div>
                 <div className="homepage-divider"></div>
+                <div className="homepage-toolbar">
+                    <Button className="homepage-create-task" theme="black" size="medium">
+                        Создать задачу
+                    </Button>
+                    <div className="homepage-categories-list">
+                        <button
+                            className="category-menu-button"
+                            onClick={() => setShowCategorySettings(true)}
+                            aria-label="Открыть меню категорий"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+                                <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                                <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
+                            </svg>
+                        </button>
+                        <button 
+                            className="homepage-category-add" 
+                            title="Создать категорию"
+                            onClick={() => setShowCategoryForm(true)}
+                        >
+                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                                <circle cx="11" cy="11" r="10" fill="var(--gray_50, #808080)" />
+                                <path d="M11 7v8M7 11h8" stroke="#d9d9d9" strokeWidth="2" strokeLinecap="round"/>
+                            </svg>
+                        </button>
+                        <span
+                            className={`homepage-category-chip${activeCategory === "Все" ? " active" : ""}`}
+                            onClick={() => setActiveCategory("Все")}
+                        >
+                            Все
+                        </span>
+                        {filteredCategories.map(cat => (
+                            <span
+                                key={cat.id}
+                                className={`homepage-category-chip${activeCategory === cat.name ? " active" : ""}`}
+                                style={{ background: cat.color, color: cat.text_color }}
+                                onClick={() => setActiveCategory(cat.name)}
+                            >
+                                {cat.name}
+                            </span>
+                        ))}
+                    </div>
+                    {showCategoryForm && (
+                        <CategoryForm
+                            projectName={projectName}
+                            onClose={() => setShowCategoryForm(false)}
+                        />
+                    )}
+                    {showCategorySettings && (
+                        <CategorySettings
+                            categories={filteredCategories}
+                            onSave={handleSaveCategory}
+                            onDeleteCategory={handleDeleteCategory}
+                            onClose={() => setShowCategorySettings(false)}
+                        />
+                    )}
+                </div>
                 <section className="homepage-tasks-table">
                     <table className="homepage-table">
                         <thead>
