@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.utils import timezone
+from datetime import timedelta
 
 from .managers import CustomUserManager
 
@@ -68,7 +69,7 @@ class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     date_create = models.DateTimeField(auto_now_add=True)
-    date_deadline = models.DateTimeField(blank=True, null=True)
+    date_deadline = models.DateTimeField(blank=True, null=True, default=timezone.now() + timedelta(days=21))
     is_done = models.BooleanField(default=False)
     is_started = models.BooleanField(default=False)
     by_who = models.CharField(max_length=100, default='')

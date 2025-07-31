@@ -125,7 +125,6 @@
 }
 
 .homepage-category-chip.active {
-    /* outline: 2px solid var(--gray_50, #808080); */
     filter: brightness(0.8) saturate(1.2);
     background: var(--gray_80) !important;
     color: var(--gray_50) !important;

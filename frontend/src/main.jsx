@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import authSlice from './store/authslice.js'
 import projectslice from './store/projectslice.js'
 import categoryslice from './store/categoryslice.js'
+import taskslice from './store/taskslice.js'
 import { configureStore } from '@reduxjs/toolkit'
 
 const store = configureStore({
@@ -13,6 +14,7 @@ const store = configureStore({
     auth: authSlice,
     projects: projectslice,
     categories: categoryslice,
+    tasks: taskslice,
   }
 })
 

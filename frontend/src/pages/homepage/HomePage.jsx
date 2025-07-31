@@ -1,11 +1,14 @@
 import React, { use, useEffect, useState } from "react";
 import { fetchCategories } from "../../store/categoryslice";
+import { fetchTasks } from "../../store/taskslice";
 import { logout } from "../../store/authslice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import CategoryForm from "../../components/CategoryComponents/CategoryForm/CategoryForm";
 import CategorySettings from "../../components/CategoryComponents/CategorySettings/CategorySettings";
+
+import TaskCard from "../../components/TaskComponents/TaskCard/TaskCard";
 
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Button from "../../components/Button/Button";
@@ -81,24 +84,59 @@ const columns = [
     // "Завершенные"
 ];
 
+function getColumnTasks(tasks) {
+    const now = new Date();
+    return {
+        "Просроченные": tasks.filter(task => new Date(task.date_deadline) < now),
+        "Сегодня": tasks.filter(task => {
+            const date = new Date(task.date_deadline);
+            return date.toDateString() === now.toDateString();
+        }),
+        "Неделя": tasks.filter(task => {
+            const date = new Date(task.date_deadline);
+            const diff = (date - now) / (1000 * 60 * 60 * 24);
+            return diff > 0 && diff <= 7;
+        }),
+        "Две": tasks.filter(task => {
+            const date = new Date(task.date_deadline);
+            const diff = (date - now) / (1000 * 60 * 60 * 24);
+            return diff > 7 && diff <= 14;
+        }),
+        "Больше двух": tasks.filter(task => {
+            const date = new Date(task.date_deadline);
+            const diff = (date - now) / (1000 * 60 * 60 * 24);
+            return diff > 14;
+        }),
+    };
+}
+
 const HomePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(fetchCategories());
+        dispatch(fetchTasks());
     }, [dispatch]);
 
     const user = useSelector((state) => state.auth.user);
     const projectName = useParams().projectName;
     const categories = useSelector((state) => state.categories);
     const filteredCategories = Array.isArray(categories.categories) ? categories.categories.filter(cat => cat.project === projectName) : [];
+    const tasks = useSelector((state) => state.tasks.tasks);
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [activeTab, setActiveTab] = useState("Задачи");
     const [activeCategory, setActiveCategory] = useState("Все");
     const [showCategoryForm, setShowCategoryForm] = useState(false);
     const [showCategorySettings, setShowCategorySettings] = useState(false);
+
+    const filteredTasks = tasks.filter(task => {
+        if (activeCategory === "Все") return task.project === projectName;
+        return task.project === projectName && task.category === activeCategory;
+    });
+    const columnTasks = getColumnTasks(filteredTasks);
+    console.log("Column Tasks:", columnTasks);
 
     const handleMenuClick = (label) => {
         switch (label) {
@@ -257,8 +295,16 @@ const HomePage = () => {
                         </thead>
                         <tbody>
                             <tr>
-                                {columns.map((col) => (
-                                    <td key={col}></td>
+                                {columns.map(col => (
+                                    <td key={col}>
+                                        {columnTasks[col].length === 0 ? (
+                                            <span style={{ color: "#bbb", fontSize: 12 }}>—</span>
+                                        ) : (
+                                            columnTasks[col].map(task => (
+                                                <TaskCard key={task.id} task={task} />
+                                            ))
+                                        )}
+                                    </td>
                                 ))}
                             </tr>
                         </tbody>

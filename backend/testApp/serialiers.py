@@ -14,6 +14,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
            return token
 
 class TaskSerializer(serializers.ModelSerializer):
+    project = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=Project.objects.all()
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=Category.objects.all()
+    )
     def create(self, validated_data):
         task = Task.objects.create(
             title=validated_data['title'],
@@ -41,7 +49,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'title', 'category', 'description', 'date_create', 'date_deadline', 'is_done', 'by_who', 'is_started']
+        fields = ['id', 'project', 'title', 'category', 'description', 'date_create', 'date_deadline', 'is_done', 'by_who', 'is_started']
 
 class UserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(
