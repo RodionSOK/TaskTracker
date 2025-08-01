@@ -177,7 +177,7 @@ const StartPage = () => {
 
     const handleDeleteTask = async (projectId, taskId) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.66:8000/api/v1/tasks/${taskId}/`, {
+        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${taskId}/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -195,7 +195,7 @@ const StartPage = () => {
 
     const handleDeleteProject = async (projectId) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
+        await fetch(`http://192.168.1.65:8000/api/v1/projects/${projectId}/`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,

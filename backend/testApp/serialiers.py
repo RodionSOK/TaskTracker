@@ -13,43 +13,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
            token['last_name'] = user.last_name
            return token
 
-class TaskSerializer(serializers.ModelSerializer):
-    project = serializers.SlugRelatedField(
-        slug_field='name',
-        queryset=Project.objects.all()
-    )
-    category = serializers.SlugRelatedField(
-        slug_field='name',
-        queryset=Category.objects.all()
-    )
-    def create(self, validated_data):
-        task = Task.objects.create(
-            title=validated_data['title'],
-            description=validated_data['description'],
-            date_deadline=validated_data['date_deadline'],
-            is_done=validated_data['is_done'],
-            is_started=validated_data['is_started'],
-            by_who=validated_data['by_who'],
-            category=validated_data['category'],
-        )
-
-        return task
-    
-    def update(self, instance, validated_data):
-        instance.title = validated_data.get("title", instance.title)
-        instance.description = validated_data.get("description", instance.description)
-        instance.date_deadline = validated_data.get("date_deadline", instance.date_deadline)
-        instance.is_done = validated_data.get("is_done", instance.is_done)
-        instance.is_started = validated_data.get("is_started", instance.is_started)
-        instance.by_who = validated_data.get("by_who", instance.by_who)
-        instance.category = validated_data.get("category", instance.category)
-        instance.save()
-
-        return instance
-
-    class Meta:
-        model = Task
-        fields = ['id', 'project', 'title', 'category', 'description', 'date_create', 'date_deadline', 'is_done', 'by_who', 'is_started']
 
 class UserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(
@@ -113,6 +76,50 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'project', 'name', 'color', 'text_color']
+
+class TaskSerializer(serializers.ModelSerializer):
+    project = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=Project.objects.all()
+    )
+    category = CategorySerializer(read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), source='category', write_only=True, required=False
+    )
+    
+    def create(self, validated_data):
+        task = Task.objects.create(
+            title=validated_data['title'],
+            description=validated_data['description'],
+            date_deadline=validated_data['date_deadline'],
+            is_done=validated_data['is_done'],
+            is_started=validated_data['is_started'],
+            by_who=validated_data['by_who'],
+            category=validated_data['category'],
+        )
+
+        return task
+    
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get("title", instance.title)
+        instance.description = validated_data.get("description", instance.description)
+        instance.date_start = validated_data.get("date_start", instance.date_start)
+        instance.date_deadline = validated_data.get("date_deadline", instance.date_deadline)
+        instance.is_done = validated_data.get("is_done", instance.is_done)
+        instance.is_started = validated_data.get("is_started", instance.is_started)
+        instance.by_who = validated_data.get("by_who", instance.by_who)
+        instance.category = validated_data.get("category", instance.category)
+        instance.save()
+
+        return instance
+
+    class Meta:
+        model = Task
+        fields = [
+            'id', 'project', 'title', 'category', 'category_id',
+            'description', 'date_start', 'date_deadline',
+            'is_done', 'by_who', 'is_started'
+        ]
 
 class ProjectSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())

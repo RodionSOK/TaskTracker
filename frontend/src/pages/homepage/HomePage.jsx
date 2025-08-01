@@ -81,33 +81,35 @@ const columns = [
     "Неделя",
     "Две",
     "Больше двух",
-    // "Завершенные"
 ];
 
 function getColumnTasks(tasks) {
     const now = new Date();
-    return {
-        "Просроченные": tasks.filter(task => new Date(task.date_deadline) < now),
-        "Сегодня": tasks.filter(task => {
-            const date = new Date(task.date_deadline);
-            return date.toDateString() === now.toDateString();
-        }),
-        "Неделя": tasks.filter(task => {
-            const date = new Date(task.date_deadline);
-            const diff = (date - now) / (1000 * 60 * 60 * 24);
-            return diff > 0 && diff <= 7;
-        }),
-        "Две": tasks.filter(task => {
-            const date = new Date(task.date_deadline);
-            const diff = (date - now) / (1000 * 60 * 60 * 24);
-            return diff > 7 && diff <= 14;
-        }),
-        "Больше двух": tasks.filter(task => {
-            const date = new Date(task.date_deadline);
-            const diff = (date - now) / (1000 * 60 * 60 * 24);
-            return diff > 14;
-        }),
-    };
+    // Универсальная инициализация
+    const columnObj = Object.fromEntries(columns.map(col => [col, []]));
+
+    tasks.forEach(task => {
+        if (!task.date_deadline) {
+            columnObj["Больше двух"].push(task);
+            return;
+        }
+        const date = new Date(task.date_deadline);
+        const diff = (date - now) / (1000 * 60 * 60 * 24);
+
+        if (date < now) {
+            columnObj["Просроченные"].push(task);
+        } else if (date.toDateString() === now.toDateString() && date > now) {
+            columnObj["Сегодня"].push(task);
+        } else if (diff > 0 && diff <= 7 && date.toDateString() !== now.toDateString()) {
+            columnObj["Неделя"].push(task);
+        } else if (diff > 7 && diff <= 14) {
+            columnObj["Две"].push(task);
+        } else if (diff > 14) {
+            columnObj["Больше двух"].push(task);
+        }
+    });
+
+    return columnObj;
 }
 
 const HomePage = () => {
@@ -124,6 +126,7 @@ const HomePage = () => {
     const categories = useSelector((state) => state.categories);
     const filteredCategories = Array.isArray(categories.categories) ? categories.categories.filter(cat => cat.project === projectName) : [];
     const tasks = useSelector((state) => state.tasks.tasks);
+    // console.log("Tasks:", tasks);
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [activeTab, setActiveTab] = useState("Задачи");
@@ -131,12 +134,14 @@ const HomePage = () => {
     const [showCategoryForm, setShowCategoryForm] = useState(false);
     const [showCategorySettings, setShowCategorySettings] = useState(false);
 
-    const filteredTasks = tasks.filter(task => {
-        if (activeCategory === "Все") return task.project === projectName;
-        return task.project === projectName && task.category === activeCategory;
-    });
+    const filteredTasks = tasks
+        .filter(task => !task.is_done) 
+        .filter(task => {
+            if (activeCategory === "Все") return task.project === projectName;
+            return task.project === projectName && task.category && task.category.name === activeCategory;
+        });
     const columnTasks = getColumnTasks(filteredTasks);
-    console.log("Column Tasks:", columnTasks);
+    // console.log("Column Tasks:", columnTasks);
 
     const handleMenuClick = (label) => {
         switch (label) {
@@ -167,7 +172,7 @@ const HomePage = () => {
 
     const handleSaveCategory = async (id, data) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.66:8000/api/v1/categories/${id}/`, {
+        await fetch(`http://192.168.1.65:8000/api/v1/categories/${id}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -176,11 +181,12 @@ const HomePage = () => {
             body: JSON.stringify(data),
         });
         dispatch(fetchCategories());
+        dispatch(fetchTasks());
     };
 
     const handleDeleteCategory = async (id) => { 
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.66:8000/api/v1/categories/${id}/`, {
+        await fetch(`http://192.168.1.65:8000/api/v1/categories/${id}/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -188,6 +194,23 @@ const HomePage = () => {
             },
         });
         dispatch(fetchCategories());
+    }
+
+    const handleTask = async (task) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                is_started: task.is_started,
+                date_start: task.date_start,
+                is_done: task.is_done,
+            }),
+        });
+        dispatch(fetchTasks());
     }
 
     return (
@@ -218,12 +241,12 @@ const HomePage = () => {
                     >
                         В работе
                     </span>
-                    {/* <span
-                        className={`homepage-tab${activeTab === "Фильтры" ? " active" : ""}`}
-                        onClick={() => setActiveTab("Фильтры")}
+                    <span
+                        className={`homepage-tab${activeTab === "Завершённые" ? " active" : ""}`}
+                        onClick={() => setActiveTab("Завершённые")}
                     >
-                        Фильтры
-                    </span> */}
+                        Завершённые
+                    </span>
                 </div>
                 <div className="homepage-divider"></div>
                 <div className="homepage-toolbar">
@@ -301,7 +324,7 @@ const HomePage = () => {
                                             <span style={{ color: "#bbb", fontSize: 12 }}>—</span>
                                         ) : (
                                             columnTasks[col].map(task => (
-                                                <TaskCard key={task.id} task={task} />
+                                                <TaskCard key={task.id} task={task} onStart={handleTask} />
                                             ))
                                         )}
                                     </td>

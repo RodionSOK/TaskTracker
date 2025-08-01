@@ -68,7 +68,7 @@ class Category(models.Model):
 class Task(models.Model): 
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    date_create = models.DateTimeField(auto_now_add=True)
+    date_start = models.DateTimeField(blank=True, null=True)
     date_deadline = models.DateTimeField(blank=True, null=True, default=timezone.now() + timedelta(days=21))
     is_done = models.BooleanField(default=False)
     is_started = models.BooleanField(default=False)

@@ -116,6 +116,19 @@ class TaskViewSet(APIView):
         instance.delete()
 
         return Response({"task": "delete task" + str(pk)})
+    
+    def patch(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method PATCH not allowed"})
+        try:
+            instance = Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+            return Response({"error": "Object does not exist"})
+        serializer = TaskSerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"task": serializer.data})
 
 class CategoryViewSet(APIView):
     serializer_class = CategorySerializer

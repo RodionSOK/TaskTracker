@@ -30,6 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '192.168.1.66',
+    '192.168.1.65',
     '127.0.0.1',
     'localhost',
 ]
@@ -189,6 +190,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Ваш фронтенд-адрес
     "http://127.0.0.1:5173",
     "http://192.168.1.66:5173",
+    "http://192.168.1.65:5173",
 ]
 
 # Разрешить передачу куки и заголовков авторизации
@@ -217,7 +219,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-FRONTEND_URL = 'http://localhost:5173'
+FRONTEND_URL = "http://192.168.1.65:5173"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 587
