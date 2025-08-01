@@ -1,21 +1,11 @@
-@import "../../../styles/settings.pcss";
+@import '../../../styles/settings.pcss';
 
-.task-settings-backdrop {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.18);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99;
-}
-
-.task-settings-modal {
+.task-form {
     background: var(--white, #fff);
     box-shadow: 0 8px 32px rgba(0,0,0,0.14);
     padding: 32px 28px;
-    max-width: 540px;
-    min-width: 440px;
+    max-width: 440px;
+    min-width: 320px;
     width: 100%;
     position: relative;
     z-index: 100;
@@ -26,7 +16,7 @@
     /* border-radius: 12px; */
 }
 
-.task-settings-modal h2 {
+.task-form h2 {
     margin-top: 0;
     margin-bottom: 28px;
     font-size: 1.6rem;
@@ -34,7 +24,7 @@
     color: var(--black, #222);
 }
 
-.task-settings-modal label {
+.task-form label {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -42,9 +32,9 @@
     color: var(--black, #222);
 }
 
-.task-settings-modal input,
-.task-settings-modal textarea,
-.task-settings-modal select {
+.task-form input,
+.task-form textarea,
+.task-form select {
     width: 100%;
     height: 44px;
     font-size: 16px;
@@ -57,31 +47,38 @@
     margin: 0;
 }
 
-.task-settings-modal input:focus,
-.task-settings-modal textarea:focus,
-.task-settings-modal select:focus {
+.task-form textarea {
+    min-height: 44px;
+    resize: vertical;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.task-form input:focus,
+.task-form textarea:focus,
+.task-form select:focus {
     border-color: var(--gray_70, #bdbdbd);
     background: #fff;
     outline: none;
 }
 
-.task-settings-actions-vertical {
+.task-form-actions {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 10px;
 }
 
-.task-settings-actions-vertical button{
+.task-form-actions button {
     font-size: 18px;
 }
 
 @media (max-width: 600px) {
-    .task-settings-modal {
+    .task-form {
         max-width: 98vw;
         padding: 16px 8px;
     }
-    .task-settings-actions {
+    .task-form-actions {
         gap: 8px;
     }
 }

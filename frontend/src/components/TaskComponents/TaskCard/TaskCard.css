@@ -77,10 +77,16 @@
 .task-card-description {
     font-size: 0.97em;
     color: var(--gray_20);
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin-top: 14px;
+    margin-bottom: 14px;
     word-break: break-word;
+    white-space: pre-line; /* сохраняет переносы строк как в форме создания */
     text-align: left;
+    padding-left: 2px;
+    padding-right: 2px;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .task-card-timebar {
     width: 100%;
@@ -134,4 +140,31 @@
     background: none;
     outline: none;
     box-shadow: none;
+}
+
+.task-card-action-btn.pause {
+    border-color: var(--gray_50);
+    color: var(--gray_50);
+    background: none;
+}
+
+.task-card-action-btn.pause:hover {
+    border-color: var(--gray_20);
+    color: var(--gray_20);
+}
+
+.task-card-action-btn.resume {
+    border-color: var(--gray_50);
+    color: var(--gray_50);
+    background: none;
+}
+
+.task-card-action-btn.resume:hover {
+    border-color: var(--gray_20);
+    color: var(--gray_20);
+}
+
+.task-card.paused {
+    opacity: 0.55;
+    transition: opacity 0.2s;
 }

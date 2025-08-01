@@ -4,6 +4,8 @@
     display: flex;
     min-height: 100vh;
     background: var(--gray_95, #f5f5f5);
+    overflow: auto;
+
 }
 
 .homepage-sidebar {
@@ -151,7 +153,7 @@
 .homepage-table th,
 .homepage-table td {
     text-align: center;
-    vertical-align: middle;
+    vertical-align: top;
     padding: 14px 12px;
     border-bottom: 1px solid var(--gray_90, #ececec);
     font-size: 15px;
@@ -159,6 +161,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    /* flex-direction: column; */
 }
 
 .homepage-table th:not(:last-child),

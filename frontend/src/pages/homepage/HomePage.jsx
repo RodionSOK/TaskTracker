@@ -1,6 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import { fetchCategories } from "../../store/categoryslice";
 import { fetchTasks } from "../../store/taskslice";
+import { fetchProjects } from "../../store/projectslice";
 import { logout } from "../../store/authslice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,6 +10,8 @@ import CategoryForm from "../../components/CategoryComponents/CategoryForm/Categ
 import CategorySettings from "../../components/CategoryComponents/CategorySettings/CategorySettings";
 
 import TaskCard from "../../components/TaskComponents/TaskCard/TaskCard";
+import TaskSettings from "../../components/TaskComponents/TaskSettings/TaskSettings";
+import TaskForm from "../../components/TaskComponents/TaskForm/TaskForm";
 
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Button from "../../components/Button/Button";
@@ -108,6 +111,9 @@ function getColumnTasks(tasks) {
             columnObj["Больше двух"].push(task);
         }
     });
+    Object.keys(columnObj).forEach(col => {
+        columnObj[col].sort((a, b) => a.id - b.id);
+    });
 
     return columnObj;
 }
@@ -119,29 +125,37 @@ const HomePage = () => {
     useEffect(() => {
         dispatch(fetchCategories());
         dispatch(fetchTasks());
+        dispatch(fetchProjects());
     }, [dispatch]);
 
     const user = useSelector((state) => state.auth.user);
     const projectName = useParams().projectName;
+    const projects = useSelector((state) => state.projects.projects?.projects || []);
+    const myProject = projects.find(project => project.name === projectName) || {};
+
+    // console.log("Projects:", projects);
     const categories = useSelector((state) => state.categories);
     const filteredCategories = Array.isArray(categories.categories) ? categories.categories.filter(cat => cat.project === projectName) : [];
     const tasks = useSelector((state) => state.tasks.tasks);
-    // console.log("Tasks:", tasks);
+    // console.log("Tasks:", );
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [activeTab, setActiveTab] = useState("Задачи");
     const [activeCategory, setActiveCategory] = useState("Все");
     const [showCategoryForm, setShowCategoryForm] = useState(false);
     const [showCategorySettings, setShowCategorySettings] = useState(false);
+    const [showTaskSettings, setShowTaskSettings] = useState(false);
+    const [selectedTask, setSelectedTask] = useState(null);
+    const [showTaskForm, setShowTaskForm] = useState(false);
 
     const filteredTasks = tasks
         .filter(task => !task.is_done) 
         .filter(task => {
-            if (activeCategory === "Все") return task.project === projectName;
-            return task.project === projectName && task.category && task.category.name === activeCategory;
+            if (activeCategory === "Все") return task.project === myProject.id;
+            return task.project === myProject.name && task.category && task.category.name === activeCategory;
         });
     const columnTasks = getColumnTasks(filteredTasks);
-    // console.log("Column Tasks:", columnTasks);
+    console.log("Column Tasks:", columnTasks);
 
     const handleMenuClick = (label) => {
         switch (label) {
@@ -208,10 +222,76 @@ const HomePage = () => {
                 is_started: task.is_started,
                 date_start: task.date_start,
                 is_done: task.is_done,
+                is_continued: task.is_continued,
             }),
         });
         dispatch(fetchTasks());
     }
+
+    const handleEditTaskSave = async (task) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                title: task.title,
+                description: task.description,
+                category_id: task.category.id,
+                date_deadline: task.date_deadline,
+                is_started: task.is_started,
+                is_done: task.is_done,
+                is_continued: task.is_continued,
+            }),
+        });
+        dispatch(fetchTasks());
+    }
+
+    const handleDeleteTask = async (task) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        dispatch(fetchTasks());
+    };
+
+    const handleCreateTask = async (taskData) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.65:8000/api/v1/tasks/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                title: taskData.title,
+                description: taskData.description,
+                category_id: taskData.category?.id || null,
+                date_deadline: taskData.date_deadline,
+                project: myProject.id,
+                by_who: user.email,
+                is_done: false,
+                is_started: false,
+                is_continued: true,
+                date_start: null,
+            }),
+        });
+        setShowTaskForm(false);
+        dispatch(fetchTasks());
+    };
+
+    const handleEditTask = (task) => {
+        setSelectedTask(task);
+        setShowTaskSettings(true);
+    };
+
+    // console.log("Filtered Categories:", tasks);
 
     return (
         <div className="homepage-root">
@@ -250,7 +330,12 @@ const HomePage = () => {
                 </div>
                 <div className="homepage-divider"></div>
                 <div className="homepage-toolbar">
-                    <Button className="homepage-create-task" theme="black" size="medium">
+                    <Button 
+                        className="homepage-create-task" 
+                        theme="black" 
+                        size="medium"
+                        onClick={() => setShowTaskForm(true)}
+                    >
                         Создать задачу
                     </Button>
                     <div className="homepage-categories-list">
@@ -324,7 +409,12 @@ const HomePage = () => {
                                             <span style={{ color: "#bbb", fontSize: 12 }}>—</span>
                                         ) : (
                                             columnTasks[col].map(task => (
-                                                <TaskCard key={task.id} task={task} onStart={handleTask} />
+                                                <TaskCard 
+                                                    key={task.id} 
+                                                    task={task} 
+                                                    onStart={handleTask} 
+                                                    onClick={() => handleEditTask(task)} 
+                                                />
                                             ))
                                         )}
                                     </td>
@@ -333,6 +423,27 @@ const HomePage = () => {
                         </tbody>
                     </table>
                 </section>
+                {showTaskSettings && selectedTask && (
+                    <div className="task-settings-backdrop">
+                        <TaskSettings
+                            task={selectedTask}
+                            categories={filteredCategories}
+                            onSave={handleEditTaskSave}
+                            onDelete={handleDeleteTask}
+                            onStart={handleTask}
+                            onClose={() => setShowTaskSettings(false)}
+                        />
+                    </div>
+                )}
+                {showTaskForm && (
+                    <div className="task-settings-backdrop">
+                        <TaskForm
+                            categories={filteredCategories}
+                            onSave={handleCreateTask}
+                            onClose={() => setShowTaskForm(false)}
+                        />
+                    </div>
+                )}
             </main>
             {!sidebarCollapsed && (
                 <div

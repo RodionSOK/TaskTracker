@@ -78,13 +78,13 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'project', 'name', 'color', 'text_color']
 
 class TaskSerializer(serializers.ModelSerializer):
-    project = serializers.SlugRelatedField(
-        slug_field='name',
-        queryset=Project.objects.all()
-    )
+    # project = serializers.SlugRelatedField(
+    #     slug_field='name',
+    #     queryset=Project.objects.all()
+    # )
     category = CategorySerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), source='category', write_only=True, required=False
+        queryset=Category.objects.all(), source='category', write_only=True, required=False, allow_null=True
     )
     
     def create(self, validated_data):
@@ -94,8 +94,11 @@ class TaskSerializer(serializers.ModelSerializer):
             date_deadline=validated_data['date_deadline'],
             is_done=validated_data['is_done'],
             is_started=validated_data['is_started'],
+            is_continued=validated_data['is_continued'],
             by_who=validated_data['by_who'],
             category=validated_data['category'],
+            date_start=validated_data['date_start'],
+            project=validated_data['project'],
         )
 
         return task
@@ -105,6 +108,7 @@ class TaskSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get("description", instance.description)
         instance.date_start = validated_data.get("date_start", instance.date_start)
         instance.date_deadline = validated_data.get("date_deadline", instance.date_deadline)
+        instance.is_continued = validated_data.get("is_continued", instance.is_continued)
         instance.is_done = validated_data.get("is_done", instance.is_done)
         instance.is_started = validated_data.get("is_started", instance.is_started)
         instance.by_who = validated_data.get("by_who", instance.by_who)
@@ -118,7 +122,7 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'project', 'title', 'category', 'category_id',
             'description', 'date_start', 'date_deadline',
-            'is_done', 'by_who', 'is_started'
+            'is_done', 'by_who', 'is_started', 'is_continued',
         ]
 
 class ProjectSerializer(serializers.ModelSerializer):

@@ -17,8 +17,11 @@ const formatDeadline = (dateStr) => {
     });
 };
 
-const getTimePercent = (date_deadline, date_start) => {
+const getTimePercent = (date_deadline, date_start, is_continued) => {
     if (!date_deadline || !date_start) return 0;
+    if (is_continued === false) {
+        return getTimePercent._lastPercent || 0;
+    }
     const now = new Date();
     const start = new Date(date_start);
     const end = new Date(date_deadline);
@@ -27,13 +30,16 @@ const getTimePercent = (date_deadline, date_start) => {
     if (now <= start) return 0;
     const total = end - start;
     const passed = now - start;
-    return Math.max(0, Math.min(100, Math.round((passed / total) * 100)));
+    const percent = Math.max(0, Math.min(100, Math.round((passed / total) * 100)));
+    getTimePercent._lastPercent = percent;
+    return percent;
 };
 
 const TaskCard = ({ task, onClick, onStart }) => {
     if (!task) return null;
 
-    const [started, setStarted] = useState(task.is_started);
+    const started = task.is_started;
+    const continued = task.is_continued;
 
     const titleColor =
         task.category && task.category.text_color
@@ -42,16 +48,18 @@ const TaskCard = ({ task, onClick, onStart }) => {
 
     const taskStatus = task.is_done ? "Выполнено" : "Не выполнено";
     const taskDeadline = formatDeadline(task.date_deadline);
-    const timePercent = getTimePercent(task.date_deadline, task.date_start);
+    const timePercent = getTimePercent(task.date_deadline, task.date_start, task.is_continued);
 
     const handleStartClick = () => {
         const now = new Date().toISOString();
-        setStarted(true);
+        // setStarted(true);
+        // setContinued(true);
         if (onStart) {
             onStart({
                 ...task, 
                 date_start: now,
                 is_started: true,
+                is_continued: true,
             });
         }
     };
@@ -63,11 +71,31 @@ const TaskCard = ({ task, onClick, onStart }) => {
                 is_done: true,
             });
         }
-        setStarted(false);
+        // setStarted(false);
     }
 
+    const handlePauseClick = () => {
+        // setContinued(false);
+        if (onStart) {
+            onStart({
+                ...task,
+                is_continued: false,
+            });
+        }
+    }
+
+    const handleResumeClick = () => {
+        // setContinued(true);
+        if (onStart) {
+            onStart({
+                ...task,
+                is_continued: true,
+            });
+        }
+    };
+
     return (
-        <div className="task-card">
+        <div className={`task-card ${!continued ? "paused" : ""}`} onClick={onClick}>
             {task.category && (
                 <div
                     className="task-card-category-circle"
@@ -99,12 +127,39 @@ const TaskCard = ({ task, onClick, onStart }) => {
                 </div>
                 <Button
                     size="small"
-                    // theme={started ? "red" : "black"}
                     className={`task-card-action-btn ${started ? "started" : ""}`}
-                    onClick={started ? handleCompleteClick : handleStartClick}
+                    onClick={e => {
+                        e.stopPropagation();
+                        started ? handleCompleteClick() : handleStartClick();
+                    }}
                 >
                     {started ? "Завершить" : "Начать"}
                 </Button>
+                {started && (
+                    continued ? (
+                        <Button
+                            size="small"
+                            className="task-card-action-btn pause"
+                            onClick={e => {
+                                e.stopPropagation();
+                                handlePauseClick();
+                            }}
+                        >
+                            Остановить
+                        </Button>
+                    ) : (
+                        <Button
+                            size="small"
+                            className="task-card-action-btn resume"
+                            onClick={e => {
+                                e.stopPropagation();
+                                handleResumeClick();
+                            }}
+                        >
+                            Продолжить
+                        </Button>
+                    )
+                )}
             </div>
         </div>
     );

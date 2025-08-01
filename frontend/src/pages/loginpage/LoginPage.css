@@ -3,7 +3,7 @@ html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow: hidden;
+    /* overflow: hidden; */
     font-family: 'Rubik', sans-serif;
     font-weight: 400;
 }
@@ -17,7 +17,7 @@ html, body {
     align-items: center;
     justify-content: center;
     background: #fff;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .loginpage-container {
