@@ -1,21 +1,20 @@
-import React,  { useState } from "react";
-
+import React from "react";
+import DeadlineField from "../../DeadlineField/DeadlineField";
 import Button from "../../Button/Button";
 import "./TaskCard.css";
 
-const formatDeadline = (dateStr) => {
-    if (!dateStr) return "Без срока";
-    const date = new Date(dateStr);
-    if (isNaN(date)) return "Без срока";
-    return date.toLocaleDateString("ru-RU", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-    }) + " " + date.toLocaleTimeString("ru-RU", {
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-};
+// const formatDeadline = (dateStr) => {
+//     if (!dateStr) return "Без срока";
+//     const date = new Date(dateStr);
+//     if (isNaN(date)) return "Без срока";
+//     return date.toLocaleDateString("ru-RU", {
+//         day: "2-digit",
+//         month: "short"
+//     }) + " " + date.toLocaleTimeString("ru-RU", {
+//         hour: "2-digit",
+//         minute: "2-digit"
+//     });
+// };
 
 const getTimePercent = (date_deadline, date_start, is_continued) => {
     if (!date_deadline || !date_start) return 0;
@@ -35,7 +34,7 @@ const getTimePercent = (date_deadline, date_start, is_continued) => {
     return percent;
 };
 
-const TaskCard = ({ task, onClick, onStart }) => {
+const TaskCard = ({ task, onClick, onStart, onDragStart }) => {
     if (!task) return null;
 
     const started = task.is_started;
@@ -47,13 +46,10 @@ const TaskCard = ({ task, onClick, onStart }) => {
             : "var(--black)";
 
     const taskStatus = task.is_done ? "Выполнено" : "Не выполнено";
-    const taskDeadline = formatDeadline(task.date_deadline);
     const timePercent = getTimePercent(task.date_deadline, task.date_start, task.is_continued);
 
     const handleStartClick = () => {
         const now = new Date().toISOString();
-        // setStarted(true);
-        // setContinued(true);
         if (onStart) {
             onStart({
                 ...task, 
@@ -71,21 +67,18 @@ const TaskCard = ({ task, onClick, onStart }) => {
                 is_done: true,
             });
         }
-        // setStarted(false);
-    }
+    };
 
     const handlePauseClick = () => {
-        // setContinued(false);
         if (onStart) {
             onStart({
                 ...task,
                 is_continued: false,
             });
         }
-    }
+    };
 
     const handleResumeClick = () => {
-        // setContinued(true);
         if (onStart) {
             onStart({
                 ...task,
@@ -95,27 +88,55 @@ const TaskCard = ({ task, onClick, onStart }) => {
     };
 
     return (
-        <div className={`task-card ${!continued ? "paused" : ""}`} onClick={onClick}>
+        <div 
+            className={`task-card ${!continued ? "paused" : ""}`} 
+            draggable 
+            onDragStart={e => onDragStart && onDragStart(e, task)}
+        >
             {task.category && (
                 <div
                     className="task-card-category-circle"
                     style={{
                         background: task.category.color,
-                        // color: task.category.text_color || "#fff",
-                        // borderColor: "var(--gray_85)"
                     }}
                     title={typeof task.category === "object" ? task.category.name : task.category}
                 />
             )}
             <div className="task-card-header">
                 <span className="task-card-title" style={{color: titleColor}}>{task.title}</span>
+                <button
+                    className="task-menu-button"
+                    onClick={e => {
+                        e.stopPropagation(); // <-- добавьте это!
+                        if (onClick) onClick();
+                    }}
+                    aria-label="Открыть меню проекта"
+                >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
+                    </svg>
+                </button>
             </div>
-             <div className="task-card-description">
+            
+            <div className="task-card-description">
                 {task.description}
             </div>
             <div className="task-card-info">
                 <span>Статус: {taskStatus}</span>
-                <span>Срок: {taskDeadline}</span>
+                <DeadlineField
+                    date_deadline={task.date_deadline}
+                    onChange={newDeadline => {
+                        // console.log("Updating deadline to:", newDeadline);
+                        if (onStart && newDeadline !== task.date_deadline) {
+                            onStart({
+                                ...task,
+                                date_deadline: newDeadline,
+                            });
+                        }
+                    }}
+                />
                 <div className="task-card-timebar">
                     <div
                         className="task-card-timebar-fill"

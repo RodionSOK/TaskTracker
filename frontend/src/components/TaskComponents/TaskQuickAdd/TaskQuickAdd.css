@@ -1,0 +1,90 @@
+@import '../../../styles/settings.pcss';
+
+.task-quick-add {
+    margin-top: 2px;
+    margin-bottom: 8px;
+    /* Без фона и рамки по умолчанию */
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    /* border-radius: 10px; */
+    transition: background var(--tr_time, 0.2s), border-color var(--tr_time, 0.2s), box-shadow var(--tr_time, 0.2s);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.task-quick-add.open {
+    background: var(--white);
+    /* border: 1.5px dashed var(--gray_90, #e5e5e5); */
+    /* box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04); */
+    padding: 16px 18px 12px 18px;
+}
+
+.task-quick-add-btn {
+    width: 100%;
+    padding: 12px 0;
+    border: 2px dashed var(--gray_50, #bdbdbd);
+    background: none;
+    color: var(--gray_50, #808080);
+    font-size: 18px;
+    /* border-radius: 8px; */
+    cursor: pointer;
+    transition: border-color var(--tr_time, 0.2s), color var(--tr_time, 0.2s), background var(--tr_time, 0.2s);
+}
+
+.task-quick-add-btn:hover {
+    border-color: var(--gray_20, #888);
+    color: var(--gray_20, #888);
+    background: var(--gray_95, #f7f7f7);
+}
+
+.task-card-action-btn.create-btn {
+    width: 100%;
+    border: 2px dashed var(--green, #4caf50);
+    color: var(--green, #4caf50);
+}
+
+.task-card-action-btn.create-btn:hover {
+    border-color: var(--green_20, #185c0a);
+    color: var(--green_20, #185c0a);
+}
+
+.task-card-action-btn.cancel-btn {
+    width: 100%;
+    border: 2px dashed var(--gray_50, #bdbdbd);
+    color: var(--gray_50, #bdbdbd);
+}
+
+.task-card-action-btn.cancel-btn:hover {
+    border-color: var(--gray_20, #888);
+    color: var(--gray_20, #888);
+}
+
+.task-quick-add-actions {
+    display: flex;
+    gap: 0px;
+    margin-top: 4px;
+    flex-direction: column;
+    width: 100%;
+}
+
+.task-quick-add-input input[type=text] {
+    width: 100%;
+    height: 44px;
+    font-size: 16px;
+    padding: 0 12px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    border: 1px solid var(--gray_85, #e0e0e0);
+    background: #fafbfc;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.task-quick-add-input:focus {
+    border-color: var(--gray_70, #bdbdbd);
+    background: #fff;
+    outline: none;
+}

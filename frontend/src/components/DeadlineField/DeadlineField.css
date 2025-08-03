@@ -1,0 +1,181 @@
+@import '../../styles/settings.pcss';
+
+.deadlinefield-row {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: -10px;
+    display: flex;
+    align-items: center;
+    /* min-height: 48px; */
+    /* max-height: 48px; */
+    min-height: 40px;
+    flex-direction: column;
+    /* font-size: 1.08em; */
+    /* font-weight: 500; */
+    gap: 5px
+}
+
+.deadlinefield-value {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: var(--gray_95, #f7f7f7);
+    /* border-radius: 8px; */
+    padding: 4px 4px;
+    color: var(--gray_20, #888);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+    border: 1px solid transparent;
+    /* gap: 0px; */
+    /* overflow-x: auto; */
+}
+
+/* .deadlinefield-value:hover, .deadlinefield-value:focus {
+    background: var(--gray_85, #e0e0e0);
+    color: var(--black, #222);
+    border: 1px solid var(--gray_80, #d1d1d1);
+} */
+
+.deadlinefield-value.empty {
+    color: var(--gray_60, #bbb);
+    font-style: italic;
+}
+
+.deadlinefield-date {
+    flex: 1;
+    font-size: 1.08em;
+    font-weight: 500;
+}
+
+/* .deadlinefield-editicon::before {
+    content: "✎";
+    font-size: 1em;
+    color: var(--gray_40, #aaa);
+    margin-left: 6px;
+    opacity: 0.7;
+} */
+
+.deadlinefield-edit {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    /* gap: 0px; */
+}
+
+/* .deadlinefield-input {
+    width: 180px;
+    max-width: 100%;
+    box-sizing: border-box;
+} */
+
+.deadlinefield-save, .deadlinefield-cancel {
+    font-size: 0.98em;
+    padding: 4px 14px;
+    min-width: 80px;
+}
+
+.deadlinefield-cells {
+    display: flex;
+    gap: 3px;
+    /* width: 100%; */
+    min-width: 0;
+    flex-wrap: nowrap;
+    flex: 1;
+    height: 100%;
+}
+
+.deadlinefield-cell {
+    /* border-radius: 6px; */
+    /* padding: 4px 4px; */
+    /* min-width: 38px; */
+    text-align: center;
+    font-size: 18px;
+    height: 100%;
+    /* font-weight: 500; */
+    color: var(--black, #222);
+    /* letter-spacing: 0.5px; */
+    /* box-shadow: 0 1px 2px rgba(0,0,0,0.03); */
+    user-select: none;
+    box-sizing: border-box;
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    /* min-height: 0; */
+    /* max-height: 100%; */
+    padding: 0;
+}
+.deadlinefield-cell:hover {
+    background: var(--gray_85, #f0f0f0);
+    /* color: var(--black, #222); */
+}
+
+.deadlinefield-sep {
+    display: inline-block;
+    /* min-width: 8px; */
+    color: var(--gray_40, #aaa);
+    /* font-weight: 600; */
+    font-size: 1.08em;
+    align-self: center;
+    user-select: none;
+}
+.deadlinefield-sep.space {
+    min-width: 10px;
+    /* Просто визуальный пробел между датой и временем */
+}
+.deadlinefield-cell input {
+    width: 100%;
+    height: 100%;           /* input занимает всю высоту ячейки */
+    /* min-height: 0; */
+    /* max-height: 100%; */
+    box-sizing: border-box;
+    border: 1px solid var(--gray_85, #e0e0e0);
+    background: #fafbfc;
+    color: #222;
+    margin: 0;
+    /* padding: 0 4px; */
+    text-align: center;
+    font-size: 18px;
+    outline: none;
+    border-radius: 0;
+    display: block;
+}
+
+.deadlinefield-actions {
+    display: flex;
+    /* gap: 8px; */
+    /* margin-left: auto; */
+    flex-direction: column;
+    width: 100%;
+}
+.deadlinefield-save {
+    margin-bottom: 5px;
+    padding: 6px 18px;
+    /* border-radius: 6px; */
+    border: 2px dashed var(--green);
+    background: none;
+    color: var(--green);
+    /* font-weight: 500; */
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    font-size: 14px;
+    outline: none !important;
+    box-shadow: none;
+}
+
+.deadlinefield-save:hover {
+    border-color: var(--green-dark);
+    color: var(--green-dark);
+    background: none;
+    outline: none;
+    box-shadow: none;
+}

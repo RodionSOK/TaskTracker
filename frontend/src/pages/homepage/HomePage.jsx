@@ -9,12 +9,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import CategoryForm from "../../components/CategoryComponents/CategoryForm/CategoryForm";
 import CategorySettings from "../../components/CategoryComponents/CategorySettings/CategorySettings";
 
+import TaskQuickAdd from "../../components/TaskComponents/TaskQuickAdd/TaskQuickAdd";
 import TaskCard from "../../components/TaskComponents/TaskCard/TaskCard";
 import TaskSettings from "../../components/TaskComponents/TaskSettings/TaskSettings";
 import TaskForm from "../../components/TaskComponents/TaskForm/TaskForm";
 
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Button from "../../components/Button/Button";
+import LoadSpinner from "../../shared/preload/LoadSpinner/LoadSpinner";
 import "./HomePage.css";
 
 const sidebarMenu = [
@@ -86,6 +88,43 @@ const columns = [
     "Больше двух",
 ];
 
+function toLocalDatetimeString(date) {
+    const pad = n => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function getNearestDeadline(column) {
+    const now = new Date();
+
+    switch (column) {
+        case "Сегодня": {
+            const endOfDay = new Date(now);
+            endOfDay.setHours(23, 59, 0, 0);
+            return toLocalDatetimeString(endOfDay);
+        }
+        case "Неделя": {
+            const week = new Date(now);
+            week.setDate(week.getDate() + 7);
+            week.setHours(18, 0, 0, 0);
+            return toLocalDatetimeString(week);
+        }
+        case "Две": {
+            const twoWeeks = new Date(now);
+            twoWeeks.setDate(twoWeeks.getDate() + 14);
+            twoWeeks.setHours(18, 0, 0, 0);
+            return toLocalDatetimeString(twoWeeks);
+        }
+        case "Больше двух": {
+            const month = new Date(now);
+            month.setDate(month.getDate() + 30);
+            month.setHours(18, 0, 0, 0);
+            return toLocalDatetimeString(month);
+        }
+        default:
+            return "";
+    }
+}
+
 function getColumnTasks(tasks) {
     const now = new Date();
     // Универсальная инициализация
@@ -98,16 +137,17 @@ function getColumnTasks(tasks) {
         }
         const date = new Date(task.date_deadline);
         const diff = (date - now) / (1000 * 60 * 60 * 24);
+        const daysDiff = Math.floor(diff);
 
         if (date < now) {
             columnObj["Просроченные"].push(task);
         } else if (date.toDateString() === now.toDateString() && date > now) {
             columnObj["Сегодня"].push(task);
-        } else if (diff > 0 && diff <= 7 && date.toDateString() !== now.toDateString()) {
+        } else if (daysDiff >= 1 && daysDiff <= 7) {
             columnObj["Неделя"].push(task);
-        } else if (diff > 7 && diff <= 14) {
+        } else if (daysDiff > 7 && daysDiff <= 14) {
             columnObj["Две"].push(task);
-        } else if (diff > 14) {
+        } else if (daysDiff > 14) {
             columnObj["Больше двух"].push(task);
         }
     });
@@ -147,15 +187,20 @@ const HomePage = () => {
     const [showTaskSettings, setShowTaskSettings] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
     const [showTaskForm, setShowTaskForm] = useState(false);
+    const [draggedTask, setDraggedTask] = useState(null);
 
     const filteredTasks = tasks
         .filter(task => !task.is_done) 
         .filter(task => {
             if (activeCategory === "Все") return task.project === myProject.id;
-            return task.project === myProject.name && task.category && task.category.name === activeCategory;
+            return task.project === myProject.id && task.category && task.category.name === activeCategory;
         });
     const columnTasks = getColumnTasks(filteredTasks);
-    console.log("Column Tasks:", columnTasks);
+    // console.log("Cqlumn Tasks:", columnTasks, activeCategory);
+    // // console.log(tasks, categories, )
+    // const tasksLoading = useSelector(state => state.tasks.isLoading);
+    // const categoriesLoading = useSelector(state => state.categories.isLoading);
+    // const projectsLoading = useSelector(state => state.projects.isLoading);
 
     const handleMenuClick = (label) => {
         switch (label) {
@@ -223,6 +268,7 @@ const HomePage = () => {
                 date_start: task.date_start,
                 is_done: task.is_done,
                 is_continued: task.is_continued,
+                date_deadline: task.date_deadline,
             }),
         });
         dispatch(fetchTasks());
@@ -291,6 +337,31 @@ const HomePage = () => {
         setShowTaskSettings(true);
     };
 
+    const handleTaskDragStart = (e, task) => {
+        setDraggedTask(task);
+        // Можно добавить визуальный эффект
+        e.dataTransfer.effectAllowed = "move";
+    };
+
+    const handleTaskDrop = async (col) => {
+    if (!draggedTask) return;
+    const newDeadline = getNearestDeadline(col);
+
+    // PATCH запрос для обновления дедлайна
+    const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${draggedTask.id}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                date_deadline: newDeadline,
+            }),
+        });
+        setDraggedTask(null);
+        dispatch(fetchTasks());
+    };
     // console.log("Filtered Categories:", tasks);
 
     return (
@@ -404,18 +475,31 @@ const HomePage = () => {
                         <tbody>
                             <tr>
                                 {columns.map(col => (
-                                    <td key={col}>
-                                        {columnTasks[col].length === 0 ? (
-                                            <span style={{ color: "#bbb", fontSize: 12 }}>—</span>
-                                        ) : (
-                                            columnTasks[col].map(task => (
-                                                <TaskCard 
-                                                    key={task.id} 
-                                                    task={task} 
-                                                    onStart={handleTask} 
-                                                    onClick={() => handleEditTask(task)} 
-                                                />
-                                            ))
+                                    <td
+                                        key={col}
+                                        onDragOver={e => e.preventDefault()}
+                                        onDrop={() => handleTaskDrop(col)}
+                                        style={{ minWidth: 250, verticalAlign: "top" }}
+                                    >
+                                        {columnTasks[col].map(task => (
+                                            <TaskCard
+                                                key={task.id}
+                                                task={task}
+                                                onStart={handleTask}
+                                                onClick={() => handleEditTask(task)}
+                                                onDragStart={handleTaskDragStart}
+                                            />
+                                        ))}
+                                        {col !== "Просроченные" && (
+                                            <TaskQuickAdd
+                                                defaultDeadline={getNearestDeadline(col)}
+                                                onCreate={taskData => {
+                                                    handleCreateTask({
+                                                        ...taskData,
+                                                        // category: ... если нужно
+                                                    });
+                                                }}
+                                            />
                                         )}
                                     </td>
                                 ))}
