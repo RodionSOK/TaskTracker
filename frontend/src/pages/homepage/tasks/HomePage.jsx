@@ -1,22 +1,23 @@
 import React, { use, useEffect, useState } from "react";
-import { fetchCategories } from "../../store/categoryslice";
-import { fetchTasks } from "../../store/taskslice";
-import { fetchProjects } from "../../store/projectslice";
-import { logout } from "../../store/authslice";
+import { fetchCategories } from "../../../store/categoryslice";
+import { fetchTasks } from "../../../store/taskslice";
+import { fetchProjects } from "../../../store/projectslice";
+import { logout } from "../../../store/authslice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import CategoryForm from "../../components/CategoryComponents/CategoryForm/CategoryForm";
-import CategorySettings from "../../components/CategoryComponents/CategorySettings/CategorySettings";
+import CategoryForm from "../../../components/CategoryComponents/CategoryForm/CategoryForm";
+import CategorySettings from "../../../components/CategoryComponents/CategorySettings/CategorySettings";
 
-import TaskQuickAdd from "../../components/TaskComponents/TaskQuickAdd/TaskQuickAdd";
-import TaskCard from "../../components/TaskComponents/TaskCard/TaskCard";
-import TaskSettings from "../../components/TaskComponents/TaskSettings/TaskSettings";
-import TaskForm from "../../components/TaskComponents/TaskForm/TaskForm";
+import TaskQuickAdd from "../../../components/TaskComponents/TaskQuickAdd/TaskQuickAdd";
+import TaskCard from "../../../components/TaskComponents/TaskCard/TaskCard";
+import TaskSettings from "../../../components/TaskComponents/TaskSettings/TaskSettings";
+import TaskForm from "../../../components/TaskComponents/TaskForm/TaskForm";
 
-import Sidebar from "../../components/Sidebar/Sidebar";
-import Button from "../../components/Button/Button";
-import LoadSpinner from "../../shared/preload/LoadSpinner/LoadSpinner";
+import IsDone from "../is_done/isDone";
+import Sidebar from "../../../components/Sidebar/Sidebar";
+import Button from "../../../components/Button/Button";
+import LoadSpinner from "../../../shared/preload/LoadSpinner/LoadSpinner";
 import "./HomePage.css";
 
 const sidebarMenu = [
@@ -400,113 +401,124 @@ const HomePage = () => {
                     </span>
                 </div>
                 <div className="homepage-divider"></div>
-                <div className="homepage-toolbar">
-                    <Button 
-                        className="homepage-create-task" 
-                        theme="black" 
-                        size="medium"
-                        onClick={() => setShowTaskForm(true)}
-                    >
-                        Создать задачу
-                    </Button>
-                    <div className="homepage-categories-list">
-                        <button
-                            className="category-menu-button"
-                            onClick={() => setShowCategorySettings(true)}
-                            aria-label="Открыть меню категорий"
-                        >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
-                                <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-                                <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
-                            </svg>
-                        </button>
-                        <button 
-                            className="homepage-category-add" 
-                            title="Создать категорию"
-                            onClick={() => setShowCategoryForm(true)}
-                        >
-                            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                                <circle cx="11" cy="11" r="10" fill="var(--gray_50, #808080)" />
-                                <path d="M11 7v8M7 11h8" stroke="#d9d9d9" strokeWidth="2" strokeLinecap="round"/>
-                            </svg>
-                        </button>
-                        <span
-                            className={`homepage-category-chip${activeCategory === "Все" ? " active" : ""}`}
-                            onClick={() => setActiveCategory("Все")}
-                        >
-                            Все
-                        </span>
-                        {filteredCategories.map(cat => (
-                            <span
-                                key={cat.id}
-                                className={`homepage-category-chip${activeCategory === cat.name ? " active" : ""}`}
-                                style={{ background: cat.color, color: cat.text_color }}
-                                onClick={() => setActiveCategory(cat.name)}
+                {activeTab === "Завершённые" ? (
+                    <IsDone 
+                        projectId={myProject.id}
+                        onClick={handleEditTask}
+                        onStart={handleTask}
+                        onDelete={handleDeleteTask}
+                    />
+                ) : (
+                    <>
+                        <div className="homepage-toolbar">
+                            <Button 
+                                className="homepage-create-task" 
+                                theme="black" 
+                                size="medium"
+                                onClick={() => setShowTaskForm(true)}
                             >
-                                {cat.name}
-                            </span>
-                        ))}
-                    </div>
-                    {showCategoryForm && (
-                        <CategoryForm
-                            projectName={projectName}
-                            onClose={() => setShowCategoryForm(false)}
-                        />
-                    )}
-                    {showCategorySettings && (
-                        <CategorySettings
-                            categories={filteredCategories}
-                            onSave={handleSaveCategory}
-                            onDeleteCategory={handleDeleteCategory}
-                            onClose={() => setShowCategorySettings(false)}
-                        />
-                    )}
-                </div>
-                <section className="homepage-tasks-table">
-                    <table className="homepage-table">
-                        <thead>
-                            <tr>
-                                {columns.map((col) => (
-                                    <th key={col}>{col}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                {columns.map(col => (
-                                    <td
-                                        key={col}
-                                        onDragOver={e => e.preventDefault()}
-                                        onDrop={() => handleTaskDrop(col)}
-                                        style={{ minWidth: 250, verticalAlign: "top" }}
+                                Создать задачу
+                            </Button>
+                            <div className="homepage-categories-list">
+                                <button
+                                    className="category-menu-button"
+                                    onClick={() => setShowCategorySettings(true)}
+                                    aria-label="Открыть меню категорий"
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+                                        <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                                        <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
+                                    </svg>
+                                </button>
+                                <button 
+                                    className="homepage-category-add" 
+                                    title="Создать категорию"
+                                    onClick={() => setShowCategoryForm(true)}
+                                >
+                                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                                        <circle cx="11" cy="11" r="10" fill="var(--gray_50, #808080)" />
+                                        <path d="M11 7v8M7 11h8" stroke="#d9d9d9" strokeWidth="2" strokeLinecap="round"/>
+                                    </svg>
+                                </button>
+                                <span
+                                    className={`homepage-category-chip${activeCategory === "Все" ? " active" : ""}`}
+                                    onClick={() => setActiveCategory("Все")}
+                                >
+                                    Все
+                                </span>
+                                {filteredCategories.map(cat => (
+                                    <span
+                                        key={cat.id}
+                                        className={`homepage-category-chip${activeCategory === cat.name ? " active" : ""}`}
+                                        style={{ background: cat.color, color: cat.text_color }}
+                                        onClick={() => setActiveCategory(cat.name)}
                                     >
-                                        {columnTasks[col].map(task => (
-                                            <TaskCard
-                                                key={task.id}
-                                                task={task}
-                                                onStart={handleTask}
-                                                onClick={() => handleEditTask(task)}
-                                                onDragStart={handleTaskDragStart}
-                                            />
-                                        ))}
-                                        {col !== "Просроченные" && (
-                                            <TaskQuickAdd
-                                                defaultDeadline={getNearestDeadline(col)}
-                                                onCreate={taskData => {
-                                                    handleCreateTask({
-                                                        ...taskData,
-                                                        // category: ... если нужно
-                                                    });
-                                                }}
-                                            />
-                                        )}
-                                    </td>
+                                        {cat.name}
+                                    </span>
                                 ))}
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+                            </div>
+                            {showCategoryForm && (
+                                <CategoryForm
+                                    projectName={projectName}
+                                    onClose={() => setShowCategoryForm(false)}
+                                />
+                            )}
+                            {showCategorySettings && (
+                                <CategorySettings
+                                    categories={filteredCategories}
+                                    onSave={handleSaveCategory}
+                                    onDeleteCategory={handleDeleteCategory}
+                                    onClose={() => setShowCategorySettings(false)}
+                                />
+                            )}
+                        </div>
+                        <section className="homepage-tasks-table">
+                            <table className="homepage-table">
+                                <thead>
+                                    <tr>
+                                        {columns.map((col) => (
+                                            <th key={col}>{col}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {columns.map(col => (
+                                            <td
+                                                key={col}
+                                                onDragOver={e => e.preventDefault()}
+                                                onDrop={() => handleTaskDrop(col)}
+                                                style={{ minWidth: 250, verticalAlign: "top" }}
+                                            >
+                                                {columnTasks[col].map(task => (
+                                                    <TaskCard
+                                                        key={task.id}
+                                                        task={task}
+                                                        onStart={handleTask}
+                                                        onClick={() => handleEditTask(task)}
+                                                        onDragStart={handleTaskDragStart}
+                                                    />
+                                                ))}
+                                                {col !== "Просроченные" && (
+                                                    <TaskQuickAdd
+                                                        defaultDeadline={getNearestDeadline(col)}
+                                                        onCreate={taskData => {
+                                                            handleCreateTask({
+                                                                ...taskData,
+                                                                // category: ... если нужно
+                                                            });
+                                                        }}
+                                                    />
+                                                )}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </>
+                )}
                 {showTaskSettings && selectedTask && (
                     <div className="task-settings-backdrop">
                         <TaskSettings

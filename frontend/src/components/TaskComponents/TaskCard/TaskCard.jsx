@@ -34,7 +34,7 @@ const getTimePercent = (date_deadline, date_start, is_continued) => {
     return percent;
 };
 
-const TaskCard = ({ task, onClick, onStart, onDragStart }) => {
+const TaskCard = ({ task, onClick, onStart, onDragStart, onDelete }) => {
     if (!task) return null;
 
     const started = task.is_started;
@@ -65,6 +65,7 @@ const TaskCard = ({ task, onClick, onStart, onDragStart }) => {
             onStart({
                 ...task,
                 is_done: true,
+                is_continued: false,
             });
         }
     };
@@ -87,23 +88,45 @@ const TaskCard = ({ task, onClick, onStart, onDragStart }) => {
         }
     };
 
+    const handleResumeDoneClick = () => {
+        const now = new Date();
+        const prevStart = new Date(task.date_start);
+        const prevDeadline = new Date(task.date_deadline);
+
+        const duration = prevDeadline - prevStart;
+        const newDeadline = new Date(now.getTime() + duration);
+
+        if (onStart) {
+            onStart({
+                ...task,
+                date_start: now.toISOString(),
+                date_deadline: newDeadline.toISOString(),
+                is_started: true,
+                is_done: false,
+                is_continued: true,
+            });
+        }
+    };
+
     return (
         <div 
             className={`task-card ${!continued ? "paused" : ""}`} 
             draggable 
             onDragStart={e => onDragStart && onDragStart(e, task)}
         >
-            {task.category && (
-                <div
-                    className="task-card-category-circle"
-                    style={{
-                        background: task.category.color,
-                    }}
-                    title={typeof task.category === "object" ? task.category.name : task.category}
-                />
-            )}
             <div className="task-card-header">
-                <span className="task-card-title" style={{color: titleColor}}>{task.title}</span>
+                <div className="task-card-header-left">
+                    {task.category && (
+                        <div
+                            className="task-card-category-circle"
+                            style={{
+                                background: task.category.color,
+                            }}
+                            title={typeof task.category === "object" ? task.category.name : task.category}
+                        />
+                    )}
+                    <span className="task-card-title" style={{color: titleColor}}>{task.title}</span>
+                </div>
                 <button
                     className="task-menu-button"
                     onClick={e => {
@@ -146,40 +169,69 @@ const TaskCard = ({ task, onClick, onStart, onDragStart }) => {
                         }}
                     />
                 </div>
-                <Button
-                    size="small"
-                    className={`task-card-action-btn ${started ? "started" : ""}`}
-                    onClick={e => {
-                        e.stopPropagation();
-                        started ? handleCompleteClick() : handleStartClick();
-                    }}
-                >
-                    {started ? "Завершить" : "Начать"}
-                </Button>
-                {started && (
-                    continued ? (
+                {task.is_done ? (
+                    <div className="task-card-actions">
                         <Button
                             size="small"
-                            className="task-card-action-btn pause"
+                            className="task-card-action-btn"
+                            // theme="black"
                             onClick={e => {
                                 e.stopPropagation();
-                                handlePauseClick();
+                                handleResumeDoneClick();
                             }}
                         >
-                            Остановить
+                            Возобновить
                         </Button>
-                    ) : (
                         <Button
                             size="small"
-                            className="task-card-action-btn resume"
+                            className="task-card-action-btn started"
+                            // theme="gray"
                             onClick={e => {
                                 e.stopPropagation();
-                                handleResumeClick();
+                                onDelete && onDelete(task);
                             }}
                         >
-                            Продолжить
+                            Удалить
                         </Button>
-                    )
+                    </div>
+                ) : (
+                    <>
+                        <Button
+                            size="small"
+                            className={`task-card-action-btn ${started ? "started" : ""}`}
+                            onClick={e => {
+                                e.stopPropagation();
+                                started ? handleCompleteClick() : handleStartClick();
+                            }}
+                        >
+                            {started ? "Завершить" : "Начать"}
+                        </Button>
+                        {started && (
+                            continued ? (
+                                <Button
+                                    size="small"
+                                    className="task-card-action-btn pause"
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        handlePauseClick();
+                                    }}
+                                >
+                                    Остановить
+                                </Button>
+                            ) : (
+                                <Button
+                                    size="small"
+                                    className="task-card-action-btn resume"
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        handleResumeClick();
+                                    }}
+                                >
+                                    Продолжить
+                                </Button>
+                            )
+                        )}
+                    </>
                 )}
             </div>
         </div>

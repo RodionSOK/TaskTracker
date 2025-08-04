@@ -1,4 +1,4 @@
-@import '../../styles/settings.pcss';
+@import '../../../styles/settings.pcss';
 
 .homepage-root {
     display: flex;

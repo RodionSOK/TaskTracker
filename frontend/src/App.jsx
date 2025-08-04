@@ -4,7 +4,7 @@ import ProtectedRoute from "./shared/ProtectedRoute";
 import RegisterPage from './pages/registerpage/RegisterPage';
 import ForgotPasswordPage from './pages/forgotpasswordpage/ForgotpasswordPage';
 import ResetPasswordPage from './pages/resetpasswordpage/ResetPasswordPage';
-import HomePage from './pages/homepage/HomePage';
+import HomePage from './pages/homepage/tasks/HomePage';
 import StartPage from './pages/startpage/StartPage';
 
 function App() {
