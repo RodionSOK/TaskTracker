@@ -95,6 +95,7 @@ class TaskSerializer(serializers.ModelSerializer):
             is_done=validated_data['is_done'],
             is_started=validated_data['is_started'],
             is_continued=validated_data['is_continued'],
+            is_favorite=validated_data['is_favorite'],
             by_who=validated_data['by_who'],
             category=validated_data['category'],
             date_start=validated_data['date_start'],
@@ -111,6 +112,7 @@ class TaskSerializer(serializers.ModelSerializer):
         instance.is_continued = validated_data.get("is_continued", instance.is_continued)
         instance.is_done = validated_data.get("is_done", instance.is_done)
         instance.is_started = validated_data.get("is_started", instance.is_started)
+        instance.is_favorite = validated_data.get("is_favorite", instance.is_favorite)
         instance.by_who = validated_data.get("by_who", instance.by_who)
         instance.category = validated_data.get("category", instance.category)
         instance.save()
@@ -122,7 +124,7 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'project', 'title', 'category', 'category_id',
             'description', 'date_start', 'date_deadline',
-            'is_done', 'by_who', 'is_started', 'is_continued',
+            'is_done', 'by_who', 'is_started', 'is_continued', 'is_favorite',
         ]
 
 class ProjectSerializer(serializers.ModelSerializer):

@@ -1,0 +1,41 @@
+.inprogress-taskcard-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* gap: 0px; */
+    width: 100%;
+    /* margin-top: 24px; */
+}
+
+.inprogress-taskcard-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 0 0 16px 0;
+    box-sizing: border-box;
+}
+
+.task-card-active {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.inprogress-main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    /* height: 100%; */
+    margin-top: 18px;
+    gap: 18px;
+}
+
+.inprogress-list {
+    flex: 1 1 0;
+}
+
+.inprogress-empty {
+    text-align: center;
+    color: var(--gray_50);
+    font-size: 1.2em;
+    padding: 24px 0;
+}

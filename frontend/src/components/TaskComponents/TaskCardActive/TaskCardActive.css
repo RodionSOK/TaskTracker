@@ -1,0 +1,299 @@
+@import '../../../styles/settings.pcss';
+
+.task-card-active {
+    display: flex;
+    flex-direction: column;
+    background: var(--white, #fff);
+    /* border-radius: 14px; */
+    padding: 14px 18px 18px 18px;
+    width: 100%;
+    min-height: 110px;
+    max-height: 110px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid var(--gray_90);
+    
+}
+.task-card-active[status="false"] {
+    opacity: 0.55;
+    transition: opacity 0.2s;
+}
+
+.task-card-active.expanded {
+    max-height: 400px;
+    min-height: 110px;
+    overflow: visible;
+}
+
+.task-card-active:hover {
+    border-color: var(--gray_50);
+}
+
+.task-card-active-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.task-card-active-category {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-right: 8px;
+    /* border: 2px solid #eee; */
+}
+
+.task-card-active-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--black, #222);
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.task-card-active-fav,
+.task-card-active-menu,
+.task-card-active-delete {
+    background: none;
+    color: var(--gray_50);
+    border: none;
+    padding: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .task-card-active-fav:hover {
+    background: #fffbe6;
+} */
+
+.task-card-active-menu:hover {
+    background: var(--gray_90, #f0f0f0);
+}
+
+.task-card-active-delete:hover {
+    background: #ffeaea;
+}
+
+.task-card-active-rect-timebar {
+    position: relative;
+    width: 100%;
+    height: 31px;
+    /* min-width: 700px; */
+    /* height: 8px; */
+    background: #eee;
+    /* border-radius: 4px; */
+    /* margin-bottom: 10px; */
+    overflow: hidden;
+}
+
+.task-card-active-rect-timebar::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1em;
+    color: var(--gray_30, #555);
+    pointer-events: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.task-card-active-rect-timebar-fill {
+    height: 100%;
+    background: var(--gray_50, #808080);
+    transition: width 0.3s, background 0.3s;
+    /* box-shadow: 0 1px 4px 0 rgba(76,175,80,0.10); */
+}
+.task-card-active-rect-timebar[data-filled="true"]::after {
+    color: #fff;
+}
+
+/* .task-card-active-details {
+    margin-top: auto;
+    animation: fadeIn 0.2s;
+} */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.task-card-active-description {
+    font-size: 1.2em;
+    color: var(--gray_30, #555);
+    word-break: break-word;
+    white-space: pre-line;
+    margin-top: 8px;
+}
+
+.task-card-active-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.task-card-active-status {
+    font-size: 1.2em;
+    color: var(--gray_40, #888);
+    /* font-weight: 500; */
+}
+
+@media (max-width: 600px) {
+    .task-card-active {
+        min-width: 0;
+        max-width: 100%;
+        padding: 12px 8px;
+    }
+}
+
+.task-card-active-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+.task-card-active-details-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    margin-top: auto;
+    /* margin-bottom: ; */
+    align-items: flex-end;
+}
+
+.task-card-active-details-left {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.task-card-active-details-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 80px;
+    height: 100%;
+}
+
+.task-card-active-circle-timebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 160px;
+    /* background: #f7f7f7; */
+    border-radius: 50%;
+    margin: 8px 8px 0 0;
+    /* box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06); */
+    /* margin: 0 auto; */
+}
+
+.task-card-active-circle-timebar svg {
+    display: block;
+    width: 160px;
+    height: 160px;
+}
+
+.task-card-active-circle-timebar text {
+    font-size: 1.1em;
+    font-weight: 600;
+    fill: var(--gray_50, #808080);
+    dominant-baseline: middle;
+}
+
+/* .task-card-active-deadline { */
+    /* width: 280px !important; */
+    /* min-width: 280px !important;
+    max-width: 280px !important;
+    box-sizing: border-box;
+    flex: none !important;
+    display: block;
+} */
+
+/* .task-card-active-deadline[status="false"] { */
+    /* width: 100% !important; */
+    /* min-width: 0 !important; */
+    /* min-width: 280px !important; */
+/* } */
+/* .task-card-active-deadline .deadlinefield-row,
+.task-card-active-deadline .deadlinefield-value {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    box-sizing: border-box;
+}
+.task-card-active-deadline .deadlinefield-cells {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+.task-card-active-deadline .deadlinefield-cell {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+} */
+
+.task-card-active-deadline[status="true"] .deadlinefield-save {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+}
+
+.task-card-active-deadline[status="false"] .deadlinefield-row {
+    /* width: 100%; */
+    /* display: flex; */
+    flex-direction: row;
+    display: flex;
+    min-height: 44px;
+    margin-bottom: 0;
+    gap: 10px;
+}
+.task-card-active-deadline[status="false"] .deadlinefield-actions {
+    /* width: 200px; */
+    height: 44px;
+    /* align-items: center; */
+    justify-content: center;
+    /* margin-bottom: -50px; */
+    /* font-size: 10px; */
+    /* align-items: flex-end; */
+    /* justify-content: flex-end; */
+}    
+.task-card-active-deadline[status="false"] .deadlinefield-save {
+    font-size: 18px;
+    /* height: 30px; */
+    margin: 0 0 7px 0;
+    padding: 0 0;
+    width: 200px;
+}
+.task-card-active-deadline .deadlinefield-value {
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    flex: none !important;
+    box-sizing: border-box;
+}
+.task-card-active-deadline[status="false"] .deadlinefield-actions {
+    flex: 1 1 0; /* занимает всё оставшееся пространство */
+    min-width: 0;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.task-card-active-timebar-btn:hover svg {
+    filter: brightness(0.7);
+    transition: filter 0.2s;
+}

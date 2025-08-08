@@ -26,6 +26,7 @@
     flex-direction: column;
     transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
     margin-left: 220px;
+    min-width: 0;
 }
 
 .homepage-sidebar.collapsed ~ .homepage-main,
@@ -72,7 +73,7 @@
 .homepage-divider {
     height: 1px;
     background: var(--gray_85, #e0e0e0);
-    margin-bottom: 24px;
+    margin-bottom: 0px;
 }
 
 .homepage-sidebar-overlay {
@@ -88,9 +89,10 @@
 .homepage-toolbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin: 32px 0 24px 0;
+    /* justify-content: space-between; */
+    margin: 24px 0 24px 0;
     gap: 32px;
+    min-width: 0;
 }
 
 .homepage-categories-list {
@@ -103,6 +105,7 @@
     align-items: center;
     transition: box-shadow 0.2s;
     flex: 1 1 0;
+    min-width: 0;
 }
 
 .homepage-category-chip {

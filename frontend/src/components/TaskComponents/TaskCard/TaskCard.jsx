@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import DeadlineField from "../../DeadlineField/DeadlineField";
 import Button from "../../Button/Button";
 import "./TaskCard.css";
@@ -16,23 +16,23 @@ import "./TaskCard.css";
 //     });
 // };
 
-const getTimePercent = (date_deadline, date_start, is_continued) => {
-    if (!date_deadline || !date_start) return 0;
-    if (is_continued === false) {
-        return getTimePercent._lastPercent || 0;
-    }
-    const now = new Date();
-    const start = new Date(date_start);
-    const end = new Date(date_deadline);
-    if (isNaN(start) || isNaN(end)) return 0;
-    if (now >= end) return 100;
-    if (now <= start) return 0;
-    const total = end - start;
-    const passed = now - start;
-    const percent = Math.max(0, Math.min(100, Math.round((passed / total) * 100)));
-    getTimePercent._lastPercent = percent;
-    return percent;
-};
+// const getTimePercent = (date_deadline, date_start, is_continued) => {
+//     if (!date_deadline || !date_start) return 0;
+//     if (is_continued === false) {
+//         return getTimePercent._lastPercent || 0;
+//     }
+//     const now = new Date();
+//     const start = new Date(date_start);
+//     const end = new Date(date_deadline);
+//     if (isNaN(start) || isNaN(end)) return 0;
+//     if (now >= end) return 100;
+//     if (now <= start) return 0;
+//     const total = end - start;
+//     const passed = now - start;
+//     const percent = Math.max(0, Math.min(100, Math.round((passed / total) * 100)));
+//     getTimePercent._lastPercent = percent;
+//     return percent;
+// };
 
 const TaskCard = ({ task, onClick, onStart, onDragStart, onDelete }) => {
     if (!task) return null;
@@ -46,7 +46,46 @@ const TaskCard = ({ task, onClick, onStart, onDragStart, onDelete }) => {
             : "var(--black)";
 
     const taskStatus = task.is_done ? "Выполнено" : "Не выполнено";
+    const lastPercentRef = useRef(0);
+
+    const getTimePercent = (date_deadline, date_start, is_continued) => {
+        if (!date_deadline || !date_start) return 0;
+        const now = new Date();
+        const start = new Date(date_start);
+        const end = new Date(date_deadline);
+        if (isNaN(start) || isNaN(end)) return 0;
+        if (now >= end) return 100;
+        if (now <= start) return 0;
+        const total = end - start;
+        const passed = now - start;
+        const percent = Math.max(0, Math.min(100, Math.round((passed / total) * 100)));
+
+        if (is_continued === false) {
+            // Если процент ещё не сохранён, возвращаем вычисленный
+            if (!lastPercentRef.current) {
+                lastPercentRef.current = percent;
+            }
+            return lastPercentRef.current;
+        }
+        lastPercentRef.current = percent;
+        return percent;
+    };
+
+    useEffect(() => {
+        if (task && task.date_deadline && task.date_start && task.is_continued === false) {
+            const now = new Date();
+            const start = new Date(task.date_start);
+            const end = new Date(task.date_deadline);
+            if (!isNaN(start) && !isNaN(end) && now > start && now < end) {
+                const total = end - start;
+                const passed = now - start;
+                lastPercentRef.current = Math.max(0, Math.min(100, Math.round((passed / total) * 100)));
+            }
+        }
+    }, [task]);
+
     const timePercent = getTimePercent(task.date_deadline, task.date_start, task.is_continued);
+
 
     const handleStartClick = () => {
         const now = new Date().toISOString();

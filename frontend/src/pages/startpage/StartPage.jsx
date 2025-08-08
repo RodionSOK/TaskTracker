@@ -105,7 +105,7 @@ const StartPage = () => {
             const token = localStorage.getItem("accessToken");
             const userId = user.user_id;
 
-            const response = await fetch("http://192.168.1.66:8000/api/v1/projects/", {
+            const response = await fetch("http://192.168.1.65:8000/api/v1/projects/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const StartPage = () => {
 
     const handleFavoriteToggle = async (projectId, isFavorite) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
+        await fetch(`http://192.168.1.65:8000/api/v1/projects/${projectId}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -151,7 +151,7 @@ const StartPage = () => {
 
     const handleSaveSettings = async (projectId, data) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
+        await fetch(`http://192.168.1.65:8000/api/v1/projects/${projectId}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

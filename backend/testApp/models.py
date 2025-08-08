@@ -73,6 +73,7 @@ class Task(models.Model):
     is_done = models.BooleanField(default=False)
     is_started = models.BooleanField(default=False)
     is_continued = models.BooleanField(default=False)
+    is_favorite = models.BooleanField(default=False)
     by_who = models.CharField(max_length=100, default='')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)

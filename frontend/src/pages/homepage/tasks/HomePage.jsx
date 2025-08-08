@@ -14,6 +14,7 @@ import TaskCard from "../../../components/TaskComponents/TaskCard/TaskCard";
 import TaskSettings from "../../../components/TaskComponents/TaskSettings/TaskSettings";
 import TaskForm from "../../../components/TaskComponents/TaskForm/TaskForm";
 
+import InProgress from "../active/active";
 import IsDone from "../is_done/isDone";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import Button from "../../../components/Button/Button";
@@ -275,6 +276,21 @@ const HomePage = () => {
         dispatch(fetchTasks());
     }
 
+      const handleFavorite = async (task) => {
+        const token = localStorage.getItem("accessToken");
+        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                is_favorite: !task.is_favorite,
+            }),
+        });
+        dispatch(fetchTasks());
+    };
+
     const handleEditTaskSave = async (task) => {
         const token = localStorage.getItem("accessToken");
         await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
@@ -407,6 +423,15 @@ const HomePage = () => {
                         onClick={handleEditTask}
                         onStart={handleTask}
                         onDelete={handleDeleteTask}
+                    />
+                ) : activeTab === "В работе" ? (
+                    <InProgress 
+                        projectId={myProject.id}
+                        onClick={handleEditTask}
+                        onStart={handleTask}
+                        onDelete={handleDeleteTask}
+                        onFavoriteToggle={handleFavorite}
+                        projectName={myProject.name}
                     />
                 ) : (
                     <>

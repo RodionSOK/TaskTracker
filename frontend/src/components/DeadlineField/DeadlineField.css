@@ -109,7 +109,7 @@
     flex: 1 1 0;
     align-items: center;
     justify-content: center;
-    display: flex;
+    display: block;
     /* min-height: 0; */
     /* max-height: 100%; */
     padding: 0;
@@ -134,7 +134,7 @@
 }
 .deadlinefield-cell input {
     width: 100%;
-    height: 100%;           /* input занимает всю высоту ячейки */
+    height: 20px;           /* input занимает всю высоту ячейки */
     /* min-height: 0; */
     /* max-height: 100%; */
     box-sizing: border-box;
@@ -142,7 +142,7 @@
     background: #fafbfc;
     color: #222;
     margin: 0;
-    /* padding: 0 4px; */
+    padding: 0 0;
     text-align: center;
     font-size: 18px;
     outline: none;
