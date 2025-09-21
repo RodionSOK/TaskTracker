@@ -10,10 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
 
 from django.conf.global_settings import SERVER_EMAIL
+
+import dotenv
+
+dotenv.load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,8 +34,6 @@ SECRET_KEY = 'django-insecure-=%sf^l!lqlw^ter)c*c@sf1w$nf79e4o2xf^m)bun484m(tqmx
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.1.66',
-    '192.168.1.65',
     '127.0.0.1',
     'localhost',
 ]
@@ -85,14 +88,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+DB_NAME = os.environ.get('DB_NAME')
+DB_USER = os.environ.get('DB_USER')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_HOST = os.environ.get('DB_HOST')
+DB_PORT = os.environ.get('DB_PORT')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'testdb',
-        'USER': 'testuser',
-        'PASSWORD': '123456789',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
 
@@ -188,9 +197,6 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Ваш фронтенд-адрес
-    "http://127.0.0.1:5173",
-    "http://192.168.1.66:5173",
-    "http://192.168.1.65:5173",
 ]
 
 # Разрешить передачу куки и заголовков авторизации

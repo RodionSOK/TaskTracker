@@ -7,7 +7,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
        @classmethod
        def get_token(cls, user):
            token = super().get_token(user)
-           # Добавьте нужные поля:
            token['first_name'] = user.first_name
            token['email'] = user.email
            token['last_name'] = user.last_name
@@ -78,10 +77,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'project', 'name', 'color', 'text_color']
 
 class TaskSerializer(serializers.ModelSerializer):
-    # project = serializers.SlugRelatedField(
-    #     slug_field='name',
-    #     queryset=Project.objects.all()
-    # )
     category = CategorySerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(), source='category', write_only=True, required=False, allow_null=True
@@ -132,10 +127,10 @@ class ProjectSerializer(serializers.ModelSerializer):
     owner_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='owner', write_only=True)
     
     owners = UserSerializer(many=True, read_only=True)
-    owners_ids = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, write_only=True, source='owners')
+    owners_ids = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, write_only=True, source='owners', required=False)
 
     members = UserSerializer(many=True, read_only=True)
-    members_ids = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, write_only=True, source='members')
+    members_ids = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, write_only=True, source='members', required=False)
 
     tasks_total = serializers.IntegerField(read_only=True)
     tasks_completed = serializers.IntegerField(read_only=True)
@@ -147,38 +142,18 @@ class ProjectSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-        # invites = validated_data.pop('invites', [])
-        # members = validated_data.pop('members', [])
-        owner = validated_data['owner']  # обязательно!
+        owner = validated_data['owner']  
         project = Project.objects.create(
             owner=owner,
             owner_id=owner.id,
             name=validated_data["name"],
             is_favorite=validated_data.get("is_favorite", False),
         )
-        # if owner.id not in members:
-        #     members.append(owner.id)
-        # if members:
-        #     project.members.set(members)
-        # for email in invites:
-        #     try:
-        #         user = User.objects.get(email=email)
-        #         project.members.add(user)
-        #     except User.DoesNotExist:
-        #         pass
         return project
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get("name", instance.name)
         instance.is_favorite = validated_data.get("is_favorite", instance.is_favorite)
-        # if "invites" in validated_data:
-        #     for email in validated_data["invites"]:
-        #         try:
-        #             user = User.objects.get(email=email)
-        #             instance.members.add(user)
-        #         except User.DoesNotExist:
-        #             print("!!!!!!!!!!!!!!!!")
-        # instance.save()
         return instance
 
     class Meta:
