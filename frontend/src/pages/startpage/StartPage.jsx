@@ -49,6 +49,7 @@ const StartPage = () => {
     const { projects, isLoading, error } = useSelector(state => state.projects);
     const projectList = Array.isArray(projects.projects) ? projects.projects : [];
     const user = useSelector(state => state.auth.user);
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
 
     
@@ -58,7 +59,11 @@ const StartPage = () => {
     const [showSettings, setShowSettings] = useState(false);
     const [selectedProject, setSelectedProject] = useState(null);
 
-    const myProjects = projectList.filter(project => project.user === user.user_id);
+
+    const myProjects = user ? projectList.filter(project =>
+        project.owner.id === user.user_id ||
+        (Array.isArray(project.members) && project.members.some(member => member === user.user_id))
+    ) : [];
     const filteredProjects = activeFilter === 'favorites'
         ? myProjects.filter(project => project.is_favorite)
         : myProjects;
@@ -66,6 +71,7 @@ const StartPage = () => {
     const sortedProjects = [...filteredProjects].sort((a, b) => a.id - b.id);
 
     const selectedProjectTasks = selectedProject ? (Array.isArray(selectedProject.tasks) ? selectedProject.tasks : []) : [];
+
 
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
@@ -105,7 +111,7 @@ const StartPage = () => {
             const token = localStorage.getItem("accessToken");
             const userId = user.user_id;
 
-            const response = await fetch("http://192.168.1.65:8000/api/v1/projects/", {
+            const response = await fetch("http://localhost:8000/api/v1/projects/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -113,8 +119,9 @@ const StartPage = () => {
                 },
                 body: JSON.stringify({
                     name,
-                    user: userId,
+                    owner_id: userId,
                     is_favorite: false,
+                    owner: user, 
                     invites,
                 }),
             });
@@ -133,7 +140,7 @@ const StartPage = () => {
 
     const handleFavoriteToggle = async (projectId, isFavorite) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/projects/${projectId}/`, {
+        await fetch(`http://localhost:8000/api/v1/projects/${projectId}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -151,7 +158,7 @@ const StartPage = () => {
 
     const handleSaveSettings = async (projectId, data) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/projects/${projectId}/`, {
+        await fetch(`http://localhost:8000/api/v1/projects/${projectId}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -162,22 +169,10 @@ const StartPage = () => {
         dispatch(fetchProjects());
     };
 
-    // const handleAddParticipant = async (projectId, email) => {
-    //     const token = localStorage.getItem("accessToken");
-    //     await fetch(`http://192.168.1.66:8000/api/v1/projects/${projectId}/`, {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Authorization": `Bearer ${token}`,
-    //         },
-    //         body: JSON.stringify({ email }),
-    //     });
-    //     dispatch(fetchProjects());
-    // };
 
     const handleDeleteTask = async (projectId, taskId) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${taskId}/`, {
+        await fetch(`http://localhost:8000/api/v1/tasks/${taskId}/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -195,7 +190,7 @@ const StartPage = () => {
 
     const handleDeleteProject = async (projectId) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/projects/${projectId}/`, {
+        await fetch(`http://localhost:8000/api/v1/projects/${projectId}/`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -208,8 +203,10 @@ const StartPage = () => {
     const handleCloseSettings = () => setShowSettings(false);
 
     useEffect(() => {
-        dispatch(fetchProjects());
-    }, [dispatch]);
+        if (isAuthenticated === true) {
+            dispatch(fetchProjects());
+        }
+    }, [isAuthenticated, dispatch]);
 
     return (
         <div className="startpage-root">

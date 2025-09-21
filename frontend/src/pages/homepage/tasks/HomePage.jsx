@@ -6,6 +6,8 @@ import { logout } from "../../../store/authslice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
+import ProjectMembersBar from "../../../components/ProjectMembersBar/ProjectMembersBar";
+
 import CategoryForm from "../../../components/CategoryComponents/CategoryForm/CategoryForm";
 import CategorySettings from "../../../components/CategoryComponents/CategorySettings/CategorySettings";
 
@@ -129,7 +131,6 @@ function getNearestDeadline(column) {
 
 function getColumnTasks(tasks) {
     const now = new Date();
-    // Универсальная инициализация
     const columnObj = Object.fromEntries(columns.map(col => [col, []]));
 
     tasks.forEach(task => {
@@ -175,11 +176,9 @@ const HomePage = () => {
     const projects = useSelector((state) => state.projects.projects?.projects || []);
     const myProject = projects.find(project => project.name === projectName) || {};
 
-    // console.log("Projects:", projects);
     const categories = useSelector((state) => state.categories);
     const filteredCategories = Array.isArray(categories.categories) ? categories.categories.filter(cat => cat.project === projectName) : [];
     const tasks = useSelector((state) => state.tasks.tasks);
-    // console.log("Tasks:", );
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
     const [activeTab, setActiveTab] = useState("Задачи");
@@ -190,19 +189,40 @@ const HomePage = () => {
     const [selectedTask, setSelectedTask] = useState(null);
     const [showTaskForm, setShowTaskForm] = useState(false);
     const [draggedTask, setDraggedTask] = useState(null);
+    const [selectedUserId, setSelectedUserId] = useState(null);
 
     const filteredTasks = tasks
-        .filter(task => !task.is_done) 
+        .filter(task => !task.is_done)
+        .filter(task => 
+            (selectedUserId ? task.by_who === (myProject.members?.find(u => u.id === selectedUserId)?.email) : task.by_who === user.email)
+        )
         .filter(task => {
             if (activeCategory === "Все") return task.project === myProject.id;
             return task.project === myProject.id && task.category && task.category.name === activeCategory;
         });
+
+    const filteredInProgressTasks = tasks
+        .filter(task => !task.is_done)
+        .filter(task => 
+            (selectedUserId ? task.by_who === (myProject.members?.find(u => u.id === selectedUserId)?.email) : task.by_who === user.email)
+        )
+        .filter(task => {
+            if (activeCategory === "Все") return task.project === myProject.id;
+            return task.project === myProject.id && task.category && task.category.name === activeCategory;
+        });
+
+    const filteredDoneTasks = tasks
+        .filter(task => task.is_done)
+        .filter(task => 
+            (selectedUserId ? task.by_who === (myProject.members?.find(u => u.id === selectedUserId)?.email) : task.by_who === user.email)
+        )
+        .filter(task => {
+            if (activeCategory === "Все") return task.project === myProject.id;
+            return task.project === myProject.id && task.category && task.category.name === activeCategory;
+        });
+
     const columnTasks = getColumnTasks(filteredTasks);
-    // console.log("Cqlumn Tasks:", columnTasks, activeCategory);
-    // // console.log(tasks, categories, )
-    // const tasksLoading = useSelector(state => state.tasks.isLoading);
-    // const categoriesLoading = useSelector(state => state.categories.isLoading);
-    // const projectsLoading = useSelector(state => state.projects.isLoading);
+   
 
     const handleMenuClick = (label) => {
         switch (label) {
@@ -233,7 +253,7 @@ const HomePage = () => {
 
     const handleSaveCategory = async (id, data) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/categories/${id}/`, {
+        await fetch(`http://localhost:8000/api/v1/categories/${id}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -247,7 +267,7 @@ const HomePage = () => {
 
     const handleDeleteCategory = async (id) => { 
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/categories/${id}/`, {
+        await fetch(`http://localhost:8000/api/v1/categories/${id}/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -259,7 +279,7 @@ const HomePage = () => {
 
     const handleTask = async (task) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+        await fetch(`http://localhost:8000/api/v1/tasks/${task.id}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -278,7 +298,7 @@ const HomePage = () => {
 
       const handleFavorite = async (task) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+        await fetch(`http://localhost:8000/api/v1/tasks/${task.id}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -293,7 +313,7 @@ const HomePage = () => {
 
     const handleEditTaskSave = async (task) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+        await fetch(`http://localhost:8000/api/v1/tasks/${task.id}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -302,11 +322,12 @@ const HomePage = () => {
             body: JSON.stringify({
                 title: task.title,
                 description: task.description,
-                category_id: task.category.id,
+                category_id: task.category?.id ?? null,
                 date_deadline: task.date_deadline,
                 is_started: task.is_started,
                 is_done: task.is_done,
                 is_continued: task.is_continued,
+                is_favorite: task.is_favorite,
             }),
         });
         dispatch(fetchTasks());
@@ -314,7 +335,7 @@ const HomePage = () => {
 
     const handleDeleteTask = async (task) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${task.id}/`, {
+        await fetch(`http://localhost:8000/api/v1/tasks/${task.id}/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -326,7 +347,7 @@ const HomePage = () => {
 
     const handleCreateTask = async (taskData) => {
         const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/tasks/`, {
+        await fetch(`http://localhost:8000/api/v1/tasks/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -335,13 +356,14 @@ const HomePage = () => {
             body: JSON.stringify({
                 title: taskData.title,
                 description: taskData.description,
-                category_id: taskData.category?.id || null,
+                category_id: taskData.category?.id ?? null,
                 date_deadline: taskData.date_deadline,
                 project: myProject.id,
                 by_who: user.email,
                 is_done: false,
                 is_started: false,
                 is_continued: true,
+                is_favorite: false,
                 date_start: null,
             }),
         });
@@ -366,7 +388,7 @@ const HomePage = () => {
 
     // PATCH запрос для обновления дедлайна
     const token = localStorage.getItem("accessToken");
-        await fetch(`http://192.168.1.65:8000/api/v1/tasks/${draggedTask.id}/`, {
+        await fetch(`http://localhost:8000/api/v1/tasks/${draggedTask.id}/`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -379,7 +401,7 @@ const HomePage = () => {
         setDraggedTask(null);
         dispatch(fetchTasks());
     };
-    // console.log("Filtered Categories:", tasks);
+    // console.log();
 
     return (
         <div className="homepage-root">
@@ -394,7 +416,14 @@ const HomePage = () => {
        
             <main className={`homepage-main${sidebarCollapsed ? " collapsed" : ""}`}>
                 <header className="homepage-header">
-                    <h1 className="homepage-title">Мои задачи</h1>
+                    <div className="homepage-title-row">
+                        <h1 className="homepage-title">Мои задачи</h1>
+                        <ProjectMembersBar
+                            members={myProject.members || []}
+                            selectedUserId={selectedUserId}
+                            onSelect={setSelectedUserId}
+                        />
+                    </div>
                 </header>
                 <div className="homepage-tabs">
                     <span
@@ -423,6 +452,7 @@ const HomePage = () => {
                         onClick={handleEditTask}
                         onStart={handleTask}
                         onDelete={handleDeleteTask}
+                        tasks={filteredDoneTasks}
                     />
                 ) : activeTab === "В работе" ? (
                     <InProgress 
@@ -432,6 +462,7 @@ const HomePage = () => {
                         onDelete={handleDeleteTask}
                         onFavoriteToggle={handleFavorite}
                         projectName={myProject.name}
+                        tasks={filteredInProgressTasks}
                     />
                 ) : (
                     <>

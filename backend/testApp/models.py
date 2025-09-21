@@ -11,6 +11,8 @@ class User(AbstractBaseUser,PermissionsMixin):
     first_name = models.CharField(max_length=100, blank=True, default='')
     last_name = models.CharField(max_length=100, blank=True, default='')
 
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  # <-- новое поле
+
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -35,7 +37,9 @@ class User(AbstractBaseUser,PermissionsMixin):
         return self.email
     
 class  Project(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owned_projects")
+    owners = models.ManyToManyField(User, related_name="owner_projects", blank=True)
+    members = models.ManyToManyField(User, related_name="member_projects", blank=True)
     name = models.CharField(max_length=100, unique=True)
     is_favorite = models.BooleanField(default=False) 
 

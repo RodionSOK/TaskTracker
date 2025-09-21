@@ -8,6 +8,12 @@
 
 }
 
+.homepage-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .homepage-sidebar {
     width: 220px;
     min-width: 220px;

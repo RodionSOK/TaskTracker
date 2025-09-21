@@ -71,6 +71,22 @@ class ResetPasswordView(APIView):
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        email = request.data.get("email")
+        project_id = request.data.get("project_id")
+        if email and project_id:
+            try:
+                print(response)
+                project = Project.objects.get(id=project_id)
+                user_id = response.data.get("id")
+                if user_id:
+                    user = User.objects.get(id=user_id)
+                    project.members.add(user)
+            except Project.DoesNotExist:
+                pass
+        return response
 
 class TaskViewSet(APIView):
     serializer_class = TaskSerializer
@@ -200,10 +216,30 @@ class ProjectViewSet(APIView):
     def post(self, request):
         serializer = ProjectSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        project = serializer.save()
+       
+        if project.owner not in project.members.all():
+            project.members.add(project.owner)
+        if project.owner not in project.owners.all():
+            project.owners.add(project.owner)
 
-        return Response({'project': serializer.data})
-    
+        invites = request.data.get('invites', [])
+        for email in invites:
+            try:
+                user = User.objects.get(email=email)
+                project.members.add(user)
+            except User.DoesNotExist:
+                registration_link = f"{settings.FRONTEND_URL}/register?email={email}&project_id={project.id}"
+                send_mail(
+                    subject="Приглашение в проект",
+                    message=f"Вас пригласили в проект '{project.name}'. Зарегистрируйтесь по ссылке: {registration_link}",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=True,
+                )
+
+        return Response({'project': ProjectSerializer(project).data})
+
     def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
         if not pk:
@@ -244,5 +280,21 @@ class ProjectViewSet(APIView):
             return Response({"error": "Object does not exist"})
         serializer = ProjectSerializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"project": serializer.data})
+        project = serializer.save()
+        
+        invites = request.data.get('invites', [])
+        for email in invites:
+            try:
+                user = User.objects.get(email=email)
+                project.members.add(user)
+            except User.DoesNotExist:
+                registration_link = f"{settings.FRONTEND_URL}/register?email={email}&project_id={project.id}"
+                send_mail(
+                    subject="Приглашение в проект",
+                    message=f"Вас пригласили в проект '{project.name}'. Зарегистрируйтесь по ссылке: {registration_link}",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=True,
+                )
+
+        return Response({'project': ProjectSerializer(project).data})

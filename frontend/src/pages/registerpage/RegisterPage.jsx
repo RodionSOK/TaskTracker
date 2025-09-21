@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../store/authslice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { clearError } from "../../store/authslice";
+
+import { loginUser } from "../../store/authslice";
 
 import Button from "../../components/Button/Button";
 import Link from "../../components/Link/Link";
@@ -22,6 +24,10 @@ const RegisterPage = () => {
     }, [dispatch]);
 
     const navigate = useNavigate();
+
+    const authData = useSelector(state => state.auth);
+    console.log(authData);
+
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const isLoading = useSelector(state => state.auth.isLoading);
     const error = useSelector(state => state.auth.error);
@@ -33,11 +39,10 @@ const RegisterPage = () => {
         last_name: '',
     });
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate("/tasks");
-        }
-    }, [isAuthenticated, navigate]);
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const projectId = params.get("project_id");
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -47,15 +52,24 @@ const RegisterPage = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(registerUser({
+        const resultAction = await dispatch(registerUser({
             email: formData.email,
             password1: formData.password1,
             password2: formData.password2,
             first_name: formData.first_name,
             last_name: formData.last_name,
-        }));    
+            project_id: projectId,
+        }));
+        console.log(resultAction);
+        if (registerUser.fulfilled.match(resultAction)) {
+            await dispatch(loginUser({
+                email: formData.email,
+                password: formData.password1
+            }));
+            navigate("/start");
+        }
     };
 
     return (

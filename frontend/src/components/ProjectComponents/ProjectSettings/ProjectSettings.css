@@ -132,8 +132,8 @@
 }
 
 .project-settings-modal h3 {
-    margin-top: 28px;
-    margin-bottom: 14px;
+    margin-top: 0;
+    margin-bottom: 8px;
     font-size: 1.15rem;
     font-weight: 600;
     color: #333;

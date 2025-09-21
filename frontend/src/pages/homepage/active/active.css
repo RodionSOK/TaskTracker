@@ -1,6 +1,7 @@
 .inprogress-taskcard-list {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
     /* gap: 0px; */
     width: 100%;
     /* margin-top: 24px; */
@@ -9,7 +10,7 @@
 .inprogress-taskcard-wrapper {
     width: 100%;
     height: 100%;
-    padding: 0 0 16px 0;
+    /* padding: 0 0 16px 0; */
     box-sizing: border-box;
 }
 

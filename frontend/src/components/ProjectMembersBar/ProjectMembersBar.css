@@ -1,0 +1,10 @@
+.project-members-bar {
+    display: flex;
+    align-items: center;
+    gap: 0; /* убираем стандартный gap */
+    position: relative;
+}
+.project-member {
+    position: relative;
+    /* чтобы z-index работал при наведении */
+}

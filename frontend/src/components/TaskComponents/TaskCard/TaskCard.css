@@ -6,7 +6,7 @@
     /* border-radius: 10px; */
     /* box-shadow: 0 2px 8px rgba(0,0,0,0.07); */
     border: 1px solid var(--gray_90);
-    padding: 18px 20px 14px 20px;
+    padding: 18px 20px 18px 20px;
     margin-bottom: 12px;
     /* transition: box-shadow var(--tr_time), border-color var(--tr_time); */
     cursor: pointer;
@@ -109,7 +109,7 @@
 }
 
 .task-card-action-btn {
-    margin-top: 10px;
+    margin-top: 5px;
     padding: 6px 18px;
     /* border-radius: 6px; */
     border: 2px dashed var(--green);

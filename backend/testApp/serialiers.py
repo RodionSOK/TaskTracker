@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password1', 'password2', 'first_name', 'last_name']
+        fields = ['id', 'email', 'password1', 'password2', 'first_name', 'last_name']
 
     def validate(self, data):
         if data['password1'] != data['password2']:
@@ -128,7 +128,15 @@ class TaskSerializer(serializers.ModelSerializer):
         ]
 
 class ProjectSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    owner = UserSerializer(read_only=True)
+    owner_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='owner', write_only=True)
+    
+    owners = UserSerializer(many=True, read_only=True)
+    owners_ids = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, write_only=True, source='owners')
+
+    members = UserSerializer(many=True, read_only=True)
+    members_ids = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, write_only=True, source='members')
+
     tasks_total = serializers.IntegerField(read_only=True)
     tasks_completed = serializers.IntegerField(read_only=True)
     tasks = TaskSerializer(many=True, read_only=True, source='task_set')
@@ -137,25 +145,46 @@ class ProjectSerializer(serializers.ModelSerializer):
         write_only=True,
         required=False
     )
-    
+
     def create(self, validated_data):
-        invites = validated_data.pop('invites', [])
+        # invites = validated_data.pop('invites', [])
+        # members = validated_data.pop('members', [])
+        owner = validated_data['owner']  # обязательно!
         project = Project.objects.create(
-            user=validated_data['user'],
+            owner=owner,
+            owner_id=owner.id,
             name=validated_data["name"],
             is_favorite=validated_data.get("is_favorite", False),
         )
-        for email in invites:
-            print(email)
+        # if owner.id not in members:
+        #     members.append(owner.id)
+        # if members:
+        #     project.members.set(members)
+        # for email in invites:
+        #     try:
+        #         user = User.objects.get(email=email)
+        #         project.members.add(user)
+        #     except User.DoesNotExist:
+        #         pass
         return project
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get("name", instance.name)
         instance.is_favorite = validated_data.get("is_favorite", instance.is_favorite)
-        instance.save()
-
+        # if "invites" in validated_data:
+        #     for email in validated_data["invites"]:
+        #         try:
+        #             user = User.objects.get(email=email)
+        #             instance.members.add(user)
+        #         except User.DoesNotExist:
+        #             print("!!!!!!!!!!!!!!!!")
+        # instance.save()
         return instance
 
     class Meta:
         model = Project
-        fields = ['id', 'user', 'name', 'tasks', 'tasks_total', 'tasks_completed', 'is_favorite', 'invites']
+        fields = [
+            'id', 'owner', 'owners', 'owners_ids', 'members', 'members_ids', 
+            'name', 'tasks', 'tasks_total',
+            'tasks_completed', 'is_favorite', 'invites', 'owner_id'
+        ]
