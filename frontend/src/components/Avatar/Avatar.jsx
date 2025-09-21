@@ -10,7 +10,6 @@ function getInitials(user) {
 const Avatar = ({ user, selected = false, className = "" }) => {
     const [hovered, setHovered] = useState(false);
 
-    // Стили для затемнения и увеличения
     const avatarStyle = (selected || hovered)
         ? { filter: "brightness(0.85)", transform: "scale(1.25)" }
         : {};

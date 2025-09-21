@@ -40,7 +40,7 @@ class  Project(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owned_projects")
     owners = models.ManyToManyField(User, related_name="owner_projects", blank=True)
     members = models.ManyToManyField(User, related_name="member_projects", blank=True)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     is_favorite = models.BooleanField(default=False) 
 
     def __str__(self):
